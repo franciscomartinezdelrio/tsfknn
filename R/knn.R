@@ -67,12 +67,15 @@ knn_model <- function(timeS, lags, k, h = 1) {
   knnModel
 }
 
-#' Predicts one example doing KNN regression
+#' Predicts one example doing KNN regression.
 #'
 #' @param model The KNN model (its class should be knnModel).
 #' @param example The features of the example whose target is to be predicted.
 #'
 #' @export
+#' @example
+#' model <- knn_model(ts(c(2, 3, 1, 5, 4, 0, 7, 1, 2)), lags = 1:2, k = 2)
+#' regression(model, c(2, 1))
 regression <- function(model, example) {
   distances <- apply(model$examples$patterns, 1,
                      function(p) sqrt(sum((p - example) ^ 2)))
