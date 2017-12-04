@@ -16,6 +16,6 @@ targets <- rbind(3:4, 4:5)
 colnames(targets) <- paste0("H", 1:2)
 
 test_that("build_examples with two targets", {
-  expect_equal(build_examples(ts(1:5), 1:2, h = 2),
+  expect_equal(build_examples(ts(1:5), 1:2, nt = 2),
                list(patterns = patterns, targets = targets))
 })
