@@ -15,7 +15,7 @@
 #' @examples
 #' pred <- knn_forecasting(USAccDeaths, h = 12, lags = 1:12, k = 2)
 #' @export
-knn_forecasting <- function(timeS, h, lags, k) {
+knn_forecasting <- function(timeS, h, lags, k, msas = "recursive") {
   # Check timeS parameter
   stopifnot(is.ts(timeS) || is.vector(timeS, mode = "numeric"))
   if (! is.ts(timeS))
@@ -30,20 +30,32 @@ knn_forecasting <- function(timeS, h, lags, k) {
   stopifnot(lags[1] >= 1)
   if (tail(lags, 1) + h > length(timeS))
     stop("Impossible to create one example")
+  lags <- rev(lags)
 
   # Check k parameter
   stopifnot(is.numeric(k), length(k) == 1, k >= 1)
 
-  fit <- knn_model(timeS, lags = lags, k = k , nt = 1)
-  prediction <- recPrediction(fit, h = h)
+  # Check msas parameter
+  stopifnot(msas %in% c("recursive", "MIMO"))
+
+  if (msas == "recursive") {
+    fit <- knn_model(timeS, lags = lags, k = k , nt = 1)
+    prediction <- recPrediction(fit, h = h)
+  } else { # MIMO
+    fit <- knn_model(timeS, lags = lags, k = k , nt = h)
+    example <- as.vector(timeS[(length(timeS) + 1) - lags])
+    prediction <- regression(fit, example)
+  }
   temp <- ts(1:2, start = end(timeS), frequency = frequency(timeS))
-  prediction <- ts(prediction, start = end(temp), frequency = frequency(timeS))
+  prediction <- ts(prediction, start = end(temp),
+                   frequency = frequency(timeS))
   structure(
     list(
       timeS = timeS,
       prediction = prediction
     ),
-    class = "knnForecast")
+    class = "knnForecast"
+  )
 }
 
 recPrediction <- function(model, h) {
