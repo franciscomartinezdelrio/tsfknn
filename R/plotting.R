@@ -20,16 +20,18 @@ NULL
 #' autoplot(pred, highlight = TRUE)
 #' @export
 autoplot.knnForecast <- function(forecast, highlight = FALSE) {
-  data <- data.frame(
+  timeS <- data.frame(
     tsx   = as.vector(time(forecast$timeS)),
-    tsy   = as.vector(forecast$timeS),
+    tsy   = as.vector(forecast$timeS)
+  )
+  pred <- data.frame(
     predx = as.vector(time(forecast$pred)),
     predy = as.vector(forecast$pred)
   )
-  p <- ggplot2::ggplot(data) +
+  p <- ggplot2::ggplot(timeS) +
     ggplot2::geom_line(ggplot2::aes(x = tsx, y = tsy, colour = "Original")) +
-    ggplot2::geom_line(ggplot2::aes(x = predx, y = predy,
-                                    colour = "Prediction")) +
+    ggplot2::geom_line(data = pred, ggplot2::aes(x = predx, y = predy,
+                                                 colour = "Prediction")) +
     scale_colour_manual(values = c('black', 'red')) +
     ggplot2::labs(colour = "Time series") +
     ggplot2::xlab("Time") +
@@ -38,8 +40,8 @@ autoplot.knnForecast <- function(forecast, highlight = FALSE) {
     p <- p +
       ggplot2::geom_point(ggplot2::aes(x = tsx, y = tsy,
                           colour = "Original")) +
-      ggplot2::geom_point(ggplot2::aes(x = predx, y = predy,
-                                       colour = "Prediction"))
+      ggplot2::geom_point(data = pred, ggplot2::aes(x = predx, y = predy,
+                                                    colour = "Prediction"))
   }
   p
 }
