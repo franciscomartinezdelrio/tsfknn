@@ -1,5 +1,5 @@
-context("Changing the k of a knn model")
+context("Changing k in a knn model")
 
-model <- knn_model(ts(1:10), lags = 2:3, k = 3)
+model <- knn_model(ts(1:10), lags = 3:2, k = 3)
 
 expect_error(changeK(model) <-  8)
