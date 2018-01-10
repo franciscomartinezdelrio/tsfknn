@@ -17,17 +17,26 @@ build_examples <- function(timeS, lags, nt = 1) {
   MAXLAG <- lags[1]
   NCOL = length(lags)
   NROW = length(timeS) - MAXLAG - nt + 1
-  patterns <- matrix(data = 0, nrow = NROW, ncol = NCOL)
-  targets  <- matrix(data = 0, nrow = NROW, ncol = nt)
+  patterns <- matrix(0, nrow = NROW, ncol = NCOL)
+  targets  <- matrix(0, nrow = NROW, ncol = nt)
+  patterns_t <- matrix(0, nrow = NROW, ncol = NCOL) # added
+  targets_t  <- matrix(0, nrow = NROW, ncol = nt)   # added
   row <- 1
   for (ind in seq(MAXLAG + nt, length(timeS))) {
     patterns[row, ] <- timeS[ind - nt + 1 - lags]
     targets[row, ] <- timeS[(ind - nt + 1):ind]
+    patterns_t[row, ] <- time(timeS)[ind - nt + 1 - lags] # added
+    targets_t[row, ]  <- time(timeS)[(ind - nt + 1):ind]  # added
     row <- row + 1
   }
   colnames(patterns) <- paste0("Lag", lags)
   colnames(targets)  <- paste0("H", 1:nt)
-  return(list(patterns = patterns, targets = targets))
+  list(
+    patterns = patterns,
+    targets = targets,
+    patterns_t = patterns_t, # added
+    targets_t = targets_t    # added
+  )
 }
 
 #' Create a KNN model.
@@ -77,7 +86,7 @@ knn_model <- function(timeS, lags, k, nt = 1) {
 #' Predicts one example doing KNN regression.
 #'
 #' @param model The KNN model (its class should be knnModel).
-#' @param example The features of the example whose target is to be predicted.
+#' @param ex The features of the example whose target is to be predicted.
 #'
 #' @export
 #' @examples
@@ -88,5 +97,21 @@ regression <- function(model, example) {
                      function(p) sqrt(sum((p - example) ^ 2)))
   o <- order(distances)
   values <- model$examples$targets[o, , drop = F][1:model$k, , drop = F]
-  unname(colMeans(values))
+  n <- list() # neighbours
+  t <- list() # targets
+  for (k in 1:model$k) {
+    n[[k]] <- data.frame(
+      x = model$examples$patterns_t[o[k], ],
+      y = model$examples$patterns[o[k], ]
+    )
+    t[[k]] <- data.frame(
+      x = model$examples$targets_t[o[k], ],
+      y = model$examples$targets[o[k], ]
+    )
+  }
+  list(
+    p = unname(colMeans(values)),
+    n = n,
+    t = t
+  )
 }
