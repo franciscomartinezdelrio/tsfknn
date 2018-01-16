@@ -13,20 +13,19 @@
 #' @examples
 #' build_examples(ts(1:5), lags = 2:1)
 #' build_examples(ts(1:5), lags = 2:1, nt = 2)
+#' @export
 build_examples <- function(timeS, lags, nt = 1) {
   MAXLAG <- lags[1]
   NCOL = length(lags)
   NROW = length(timeS) - MAXLAG - nt + 1
   patterns <- matrix(0, nrow = NROW, ncol = NCOL)
   targets  <- matrix(0, nrow = NROW, ncol = nt)
-  patterns_t <- matrix(0, nrow = NROW, ncol = NCOL) # added
-  targets_t  <- matrix(0, nrow = NROW, ncol = nt)   # added
+  targetsI <- vector(mode = "integer", length = NROW)
   row <- 1
   for (ind in seq(MAXLAG + nt, length(timeS))) {
     patterns[row, ] <- timeS[ind - nt + 1 - lags]
     targets[row, ] <- timeS[(ind - nt + 1):ind]
-    patterns_t[row, ] <- time(timeS)[ind - nt + 1 - lags] # added
-    targets_t[row, ]  <- time(timeS)[(ind - nt + 1):ind]  # added
+    targetsI[row] <- ind - nt + 1
     row <- row + 1
   }
   colnames(patterns) <- paste0("Lag", lags)
@@ -34,8 +33,7 @@ build_examples <- function(timeS, lags, nt = 1) {
   list(
     patterns = patterns,
     targets = targets,
-    patterns_t = patterns_t, # added
-    targets_t = targets_t    # added
+    targetsI = targetsI
   )
 }
 
@@ -91,27 +89,14 @@ knn_model <- function(timeS, lags, k, nt = 1) {
 #' @export
 #' @examples
 #' model <- knn_model(ts(c(2, 3, 1, 5, 4, 0, 7, 1, 2)), lags = 2:1, k = 2)
-#' regression(model, c(2, 1))
+#' regression(model, c(1, 2))
 regression <- function(model, example) {
   distances <- apply(model$examples$patterns, 1,
                      function(p) sqrt(sum((p - example) ^ 2)))
   o <- order(distances)
-  values <- model$examples$targets[o, , drop = F][1:model$k, , drop = F]
-  n <- list() # neighbours
-  t <- list() # targets
-  for (k in 1:model$k) {
-    n[[k]] <- data.frame(
-      x = model$examples$patterns_t[o[k], ],
-      y = model$examples$patterns[o[k], ]
-    )
-    t[[k]] <- data.frame(
-      x = model$examples$targets_t[o[k], ],
-      y = model$examples$targets[o[k], ]
-    )
-  }
+  values <- model$examples$targets[o[1:model$k], , drop = F]
   list(
-    p = unname(colMeans(values)),
-    n = n,
-    t = t
+    prediction = unname(colMeans(values)),
+    neighbours = model$examples$targetsI[o[1:model$k]]
   )
 }

@@ -44,7 +44,9 @@ knn_forecasting <- function(timeS, h, lags, k, msas = "recursive") {
   } else { # MIMO
     fit <- knn_model(timeS, lags = lags, k = k , nt = h)
     example <- as.vector(timeS[(length(timeS) + 1) - lags])
-    prediction <- regression(fit, example)
+    reg <- regression(fit, example)
+    prediction <- reg$prediction
+    neighbours <- reg$neighbours
   }
   temp <- ts(1:2, start = end(timeS), frequency = frequency(timeS))
   prediction <- ts(prediction, start = end(temp),
@@ -52,7 +54,9 @@ knn_forecasting <- function(timeS, h, lags, k, msas = "recursive") {
   structure(
     list(
       timeS = timeS,
-      prediction = prediction
+      model = fit,
+      prediction = prediction,
+      neighbours = neighbours
     ),
     class = "knnForecast"
   )
@@ -63,7 +67,7 @@ recPrediction <- function(model, h) {
   values <- as.vector(model$ts)
   for (hor in 1:h) {
     example <- values[(length(values) + 1) - model$lags]
-    pred[hor] <- regression(model, example)
+    pred[hor] <- regression(model, example)$prediction
     values <- c(values, pred[hor])
   }
   return(pred)
