@@ -20,17 +20,26 @@ NULL
 #' autoplot(pred, highlight = "points")
 #' @export
 autoplot.knnForecast <- function(forecast, highlight = "nothing", faceting = FALSE) {
-  if (highlight %in% c("neighbours", "neighbors")) {
-    return(plot_mimo(forecast, faceting))
-  }
+  # extract the time series
   timeS <- data.frame(
     x = as.vector(time(forecast$timeS)),
     y = as.vector(forecast$timeS)
   )
+
+  # extract the forecast
   pred <- data.frame(
     x = as.vector(time(forecast$prediction)),
     y = as.vector(forecast$prediction)
   )
+
+  if (highlight %in% c("neighbours", "neighbors")) {
+    if (ncol(forecast$model$examples$targets) == 1) {
+      return(plot_recursive(timeS, pred, forecast, faceting))
+     } else {
+      return(plot_mimo(timeS, pred, forecast, faceting))
+     }
+  }
+
   p <- ggplot2::ggplot(timeS, ggplot2::aes(x, y))
   p <- p + ggplot2::geom_line(ggplot2::aes(colour = "Original"))
   p <- p + ggplot2::geom_line(ggplot2::aes(colour = "Forecast"), data = pred)
@@ -45,30 +54,38 @@ autoplot.knnForecast <- function(forecast, highlight = "nothing", faceting = FAL
   p
 }
 
-plot_mimo <- function(forecast, faceting) {
-  # plot the time series
-  timeS <- data.frame(
-    x = as.vector(time(forecast$model$ts)),
-    y = as.vector(forecast$model$ts)
-  )
-  p <- ggplot2::ggplot(timeS, ggplot2::aes(x, y))
-  p <- p + ggplot2::geom_line()
+plot_recursive <- function(timeS, predS, forecast, faceting) {
+  for (h in 1:nrow(predS)){
+    # extract the example
+    temp <- rbind(timeS, predS)
+    example <- temp[nrow(timeS) + h - forecast$model$lags, ]
 
-  # plot the forecast
-  predS <- data.frame(
-    x = as.vector(time(forecast$prediction)),
-    y = as.vector(forecast$prediction)
-  )
-  p <- p + ggplot2::geom_line(data = predS, colour = "red")
-  p <- p + ggplot2::geom_point(data = predS, ggplot2::aes(colour = "Forecast",
-                                                          shape = "Forecast"))
+    # extract the K nearest neighbours
+    features <- data.frame(matrix(ncol = 3, nrow = 0))
+    colnames(features) <- c("x", "y", "k")
+    targets <- data.frame(matrix(ncol = 3, nrow = 0))
+    colnames(targets) <- c("x", "y", "k")
+    for (k in seq(forecast$model$k)) {
+      d <- forecast$neighbours[h, k]
+      feature <- timeS[d - forecast$model$lags, ]
+      feature$k <- rep(k, nrow(feature))
+      features <- rbind(features, feature)
+      target  <- timeS[d + seq(ncol(forecast$model$examples$targets)) - 1, ]
+      target$k <- rep(k, nrow(target))
+      targets <- rbind(targets, target)
+    }
+    p <- plot_neighbours(timeS, predS, predS[h, ], example, features, targets, faceting)
+    print(p)
+    op <- par(ask = TRUE)
+  }
+  par(op)
+}
 
-  # plot the example
+plot_mimo <- function(timeS, predS, forecast, faceting) {
+  # extract the example
   example <- timeS[nrow(timeS) + 1 - forecast$model$lags, ]
-  p <- p + ggplot2::geom_point(data = example, aes(colour = "Example",
-                                                   shape = "Example"), size = 2)
 
-  # plot the K nearest neighbours
+  # extract the K nearest neighbours
   features <- data.frame(matrix(ncol = 3, nrow = 0))
   colnames(features) <- c("x", "y", "k")
   targets <- data.frame(matrix(ncol = 3, nrow = 0))
@@ -82,10 +99,32 @@ plot_mimo <- function(forecast, faceting) {
     target$k <- rep(k, nrow(target))
     targets <- rbind(targets, target)
   }
-  p <- p + ggplot2::geom_point(data = features, aes(colour = "Feature",
-                                                   shape = "Feature"), size = 2)
-  p <- p + ggplot2::geom_point(data = targets, aes(colour = "Target",
-                                                  shape = "Target"), size = 2)
+  plot_neighbours(timeS, predS, predS, example, features, targets, faceting)
+}
+
+plot_neighbours <- function(timeS, pred, pred2, example, features, targets,
+                            faceting) {
+  # plot the time series
+  p <- ggplot2::ggplot(timeS, ggplot2::aes(x, y))
+  p <- p + ggplot2::geom_line()
+
+  # plot the forecast
+  p <- p + ggplot2::geom_line(data = pred, colour = "red")
+  p <- p + ggplot2::geom_point(ggplot2::aes(colour = "Forecast",
+                                            shape = "Forecast"), data = pred2)
+
+  # plot the example
+  p <- p + ggplot2::geom_point(ggplot2::aes(colour = "Example",
+                                            shape = "Example"), data = example,
+                               size = 2)
+
+  # plot the K nearest neighbours
+  p <- p + ggplot2::geom_point(ggplot2::aes(colour = "Feature",
+                                            shape = "Feature"), size = 2,
+                               data = features)
+  p <- p + ggplot2::geom_point(ggplot2::aes(colour = "Target",
+                                            shape = "Target"), size = 2,
+                               data = targets)
   if (faceting) {
     p <- p + facet_grid(k ~ .)
   }
