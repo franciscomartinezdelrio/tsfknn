@@ -1,34 +1,63 @@
 #' @importFrom ggplot2 autoplot
 NULL
 
-#' Create a ggplot object from a knnForecast object.
+#' @importFrom graphics plot
+NULL
+
+my_colours <- function(name) {
+  col_l <- list("blue" = "#000099",
+                "red" = "#CC0000",
+                "green" = "#339900",
+                "orange" = "#CC79A7"
+  )
+  return(col_l[[name]])
+}
+
+#' @export
+plot.knnForecast <- function(x, y, ...) {
+  timeS <- c(x$model$ts, x$prediction)
+  timeS <- stats::ts(timeS,
+                     start = stats::start(x$model$ts),
+                     frequency = stats::frequency(x$model$ts)
+  )
+  graphics::plot(timeS, type = "n", ylab = "")
+  graphics::lines(x$model$ts, type = "o", pch = 20)
+  graphics::lines(x$prediction, type = "o",
+                  col = my_colours("red"),
+                  pch = 20)
+}
+
+#' Create a ggplot object from a knnForecast object
 #'
 #' It uses a knnForecast object to create a ggplot object that plots a time
-#' series and its forecast using a KNN model.
+#' series and its forecast using KNN regression.
 #'
 #' @param forecast The knnForecast object.
-#'
-#' @param highlight A boolean value indicating whether the data points
-#'                  should be highlighted using points.
+#' @param highlight A string value indicating what elements should be
+#'     highlighted. Possible values are "none", "points" and
+#'     "neighbors".
+#' @param faceting A boolean value. This applies only if the \code{highlight}
+#'     parameter is set to "neighbors". It determines whether the different
+#'     nearest neighbors are seen in different plots or in one plot.
 #'
 #' @return The ggplot object representing a graph with the forecast.
 #'
 #' @examples
-#' pred <- knn_forecasting(USAccDeaths, h = 12, lags = 1:12, k = 2, msas = "MIMO")
+#' pred <- knn_forecasting(USAccDeaths, h = 12, lags = 1:12, k = 2)
 #' library(ggplot2)
 #' autoplot(pred)
-#' autoplot(pred, highlight = "points")
+#' autoplot(pred, highlight = "neighbors")
 #' @export
-autoplot.knnForecast <- function(forecast, highlight = "nothing", faceting = FALSE) {
+autoplot.knnForecast <- function(forecast, highlight = "none", faceting = TRUE) {
   # extract the time series
   timeS <- data.frame(
-    x = as.vector(time(forecast$timeS)),
-    y = as.vector(forecast$timeS)
+    x = as.vector(stats::time(forecast$model$ts)),
+    y = as.vector(forecast$model$ts)
   )
 
   # extract the forecast
   pred <- data.frame(
-    x = as.vector(time(forecast$prediction)),
+    x = as.vector(stats::time(forecast$prediction)),
     y = as.vector(forecast$prediction)
   )
 
@@ -40,7 +69,7 @@ autoplot.knnForecast <- function(forecast, highlight = "nothing", faceting = FAL
      }
   }
 
-  p <- ggplot2::ggplot(timeS, ggplot2::aes(x, y))
+  p <- ggplot2::ggplot(timeS, ggplot2::aes_string('x', 'y'))
   p <- p + ggplot2::geom_line(ggplot2::aes(colour = "Original"))
   p <- p + ggplot2::geom_line(ggplot2::aes(colour = "Forecast"), data = pred)
   if (highlight == "points") {
@@ -48,13 +77,14 @@ autoplot.knnForecast <- function(forecast, highlight = "nothing", faceting = FAL
     p <- p + ggplot2::geom_point(ggplot2::aes(colour = "Forecast"), data = pred)
   }
   breaks <- c("Original", "Forecast")
-  colours <- c("Original" = "black", "Forecast" = "red")
+  colours <- c("Original" = "black", "Forecast" = my_colours("red"))
   p <- p + ggplot2::scale_colour_manual(values = colours, breaks = breaks)
   p <- p + ggplot2::labs(x = "Time", y = NULL, colour = "Time series")
   p
 }
 
 plot_recursive <- function(timeS, predS, forecast, faceting) {
+  op <- graphics::par(ask = TRUE)
   for (h in 1:nrow(predS)){
     # extract the example
     temp <- rbind(timeS, predS)
@@ -66,7 +96,7 @@ plot_recursive <- function(timeS, predS, forecast, faceting) {
     targets <- data.frame(matrix(ncol = 3, nrow = 0))
     colnames(targets) <- c("x", "y", "k")
     for (k in seq(forecast$model$k)) {
-      d <- forecast$neighbours[h, k]
+      d <- forecast$neighbors[h, k]
       feature <- timeS[d - forecast$model$lags, ]
       feature$k <- rep(k, nrow(feature))
       features <- rbind(features, feature)
@@ -76,9 +106,8 @@ plot_recursive <- function(timeS, predS, forecast, faceting) {
     }
     p <- plot_neighbours(timeS, predS, predS[h, ], example, features, targets, faceting)
     print(p)
-    op <- par(ask = TRUE)
   }
-  par(op)
+  graphics::par(op)
 }
 
 plot_mimo <- function(timeS, predS, forecast, faceting) {
@@ -90,8 +119,8 @@ plot_mimo <- function(timeS, predS, forecast, faceting) {
   colnames(features) <- c("x", "y", "k")
   targets <- data.frame(matrix(ncol = 3, nrow = 0))
   colnames(targets) <- c("x", "y", "k")
-  for (k in seq(forecast$neighbours)) {
-    d <- forecast$neighbours[k]
+  for (k in seq(forecast$neighbors)) {
+    d <- forecast$neighbors[k]
     feature <- timeS[d - forecast$model$lags, ]
     feature$k <- rep(k, nrow(feature))
     features <- rbind(features, feature)
@@ -105,35 +134,45 @@ plot_mimo <- function(timeS, predS, forecast, faceting) {
 plot_neighbours <- function(timeS, pred, pred2, example, features, targets,
                             faceting) {
   # plot the time series
-  p <- ggplot2::ggplot(timeS, ggplot2::aes(x, y))
+  p <- ggplot2::ggplot(timeS, ggplot2::aes_string('x', 'y'))
   p <- p + ggplot2::geom_line()
 
   # plot the forecast
-  p <- p + ggplot2::geom_line(data = pred, colour = "red")
+  p <- p + ggplot2::geom_line(data = pred, colour = my_colours("red"))
   p <- p + ggplot2::geom_point(ggplot2::aes(colour = "Forecast",
                                             shape = "Forecast"), data = pred2)
 
   # plot the example
-  p <- p + ggplot2::geom_point(ggplot2::aes(colour = "Example",
-                                            shape = "Example"), data = example,
-                               size = 2)
+  p <- p + ggplot2::geom_point(ggplot2::aes(colour = "Instance",
+                                            shape = "Instance"),
+                               data = example,
+                               size = 2
+  )
 
   # plot the K nearest neighbours
-  p <- p + ggplot2::geom_point(ggplot2::aes(colour = "Feature",
-                                            shape = "Feature"), size = 2,
-                               data = features)
-  p <- p + ggplot2::geom_point(ggplot2::aes(colour = "Target",
-                                            shape = "Target"), size = 2,
-                               data = targets)
+  p <- p + ggplot2::geom_point(ggplot2::aes(colour = "NN Features",
+                                            shape = "NN Features"),
+                               size = 2,
+                               data = features
+  )
+  p <- p + ggplot2::geom_point(ggplot2::aes(colour = "NN Targets",
+                                            shape = "NN Targets"),
+                               size = 2,
+                               data = targets
+  )
   if (faceting) {
-    p <- p + facet_grid(k ~ .)
+    p <- p + ggplot2::facet_grid(k ~ .)
   }
 
-  shapes <- c("Feature" = 1, "Target" = 5, "Example" = 3, "Forecast" = 19)
-  breaks <- c("Feature", "Target", "Example", "Forecast")
+  shapes <- c("NN Features" = 1, "NN Targets" = 0, "Instance" = 18,
+              "Forecast" = 16)
+  breaks <- c("NN Features", "NN Targets", "Instance", "Forecast")
   p <- p + ggplot2::scale_shape_manual(values = shapes, breaks = breaks)
-  colours <- c("Feature" = "blue", "Target" = "green", "Example" = "yellow",
-               "Forecast" = "red")
+  colours <- c("NN Features" = my_colours("blue"),
+               "NN Targets" = my_colours("green"),
+               "Instance" = my_colours("orange"),
+               "Forecast" = my_colours("red")
+  )
   p <- p + ggplot2::scale_colour_manual(values = colours, breaks = breaks)
   g <- ggplot2::guide_legend("Data point")
   p <- p + ggplot2::guides(colour = g, shape = g)
