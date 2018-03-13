@@ -36,9 +36,9 @@ plot.knnForecast <- function(x, y, ...) {
 #' @param highlight A string value indicating what elements should be
 #'     highlighted. Possible values are "none", "points" and
 #'     "neighbors".
-#' @param faceting A boolean value. This applies only if the \code{highlight}
+#' @param faceting A logical scalar. This applies only if the \code{highlight}
 #'     parameter is set to "neighbors". It determines whether the different
-#'     nearest neighbors are seen in different plots or in one plot.
+#'     nearest neighbors are seen in different plots (True) or in one plot.
 #'
 #' @return The ggplot object representing a graph with the forecast.
 #'
@@ -85,6 +85,7 @@ autoplot.knnForecast <- function(forecast, highlight = "none", faceting = TRUE) 
 
 plot_recursive <- function(timeS, predS, forecast, faceting) {
   op <- graphics::par(ask = TRUE)
+  on.exit(graphics::par(op), add = TRUE)
   for (h in 1:nrow(predS)){
     # extract the example
     temp <- rbind(timeS, predS)
@@ -107,7 +108,6 @@ plot_recursive <- function(timeS, predS, forecast, faceting) {
     p <- plot_neighbours(timeS, predS, predS[h, ], example, features, targets, faceting)
     print(p)
   }
-  graphics::par(op)
 }
 
 plot_mimo <- function(timeS, predS, forecast, faceting) {
