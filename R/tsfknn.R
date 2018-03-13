@@ -1,10 +1,16 @@
-#' tsfknn: A package for time series forecastin using KNN regression.
+#' tsfknn: A package for time series forecasting using KNN regression.
 #'
-#' The foo package provides three categories of important functions:
-#' foo, bar and baz.
+#' The tsfknn package allows univariate time series forecasting using KNN
+#' regression.
 #'
-#' @section Foo functions:
-#' The foo functions ...
+#' @section Functions:
+#' \describe{
+#'    \item{knnForecasting}{It is used to forecast a time series}
+#'    \item{nearest_neighbors}{To see the nearest neighbors used to
+#'           forecast a times series}
+#'    \item{autoplot}{To plot a prediction and the nearest neighbors
+#'          used in the prediction}
+#' }
 #'
 #' @docType package
 #' @name tsfknn
