@@ -1,9 +1,3 @@
-#' @importFrom ggplot2 autoplot
-NULL
-
-#' @importFrom graphics plot
-NULL
-
 my_colours <- function(name) {
   col_l <- list("blue" = "#000099",
                 "red" = "#CC0000",
@@ -13,6 +7,7 @@ my_colours <- function(name) {
   return(col_l[[name]])
 }
 
+#' @importFrom graphics plot
 #' @export
 plot.knnForecast <- function(x, y, ...) {
   timeS <- c(x$model$ts, x$prediction)
@@ -48,6 +43,7 @@ plot.knnForecast <- function(x, y, ...) {
 #' autoplot(pred)
 #' autoplot(pred, highlight = "neighbors")
 #' @export
+#' @importFrom ggplot2 autoplot
 autoplot.knnForecast <- function(forecast, highlight = "none", faceting = TRUE) {
   # extract the time series
   timeS <- data.frame(
