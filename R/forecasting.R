@@ -70,6 +70,7 @@ knn_forecasting <- function(timeS, h, lags, k, msas = "MIMO",
   structure(
     list(
       model = fit,
+      msas = msas,
       prediction = prediction,
       neighbors = neighbors
     ),
@@ -110,7 +111,7 @@ recPrediction <- function(model, h) {
 nearest_neighbors <- function(forecast) {
   stopifnot(class(forecast) == "knnForecast")
 
-  if (ncol(forecast$model$examples$targets) == 1) {
+  if (forecast$msas == "recursive") {
     return(nearest_neighbors_recursive(forecast))
   } else {
     return(nearest_neighbors_mimo(forecast))
