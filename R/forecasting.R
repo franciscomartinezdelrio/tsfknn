@@ -108,6 +108,8 @@ recPrediction <- function(model, h) {
 #' nearest_neighbors(pred)
 #' @export
 nearest_neighbors <- function(forecast) {
+  stopifnot(class(forecast) == "knnForecast")
+
   if (ncol(forecast$model$examples$targets) == 1) {
     return(nearest_neighbors_recursive(forecast))
   } else {
@@ -165,3 +167,22 @@ nearest_neighbors_mimo <- function(forecast) {
     nneighbors = r
   ))
 }
+
+#' Examples of the model associated with a prediction
+#'
+#' It allows to see the examples of the model associated to a
+#' \code{knnForecast} object.
+#'
+#' @param forecast A \code{knnForecast} object.
+#' @return A matrix including the features and targets of the examples
+#'    associated with the model associated with a \code{knnForecast} object.
+#'
+#' @examples
+#' pred <- knn_forecasting(ts(1:8), h = 1, lags = 1:2, k = 2)
+#' knn_examples(pred)
+#' @export
+knn_examples <- function(forecast) {
+  stopifnot(class(forecast) == "knnForecast")
+  cbind(forecast$model$examples$patterns, forecast$model$examples$targets)
+}
+
