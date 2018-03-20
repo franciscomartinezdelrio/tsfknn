@@ -80,7 +80,7 @@ knn_model <- function(timeS, lags, k, nt = 1, cf = "mean") {
 # model <- knn_model(ts(1:10), lags = 3:2, k = 3)
 # changeK(model) <-  4
 `changeK<-` <- function(knnModel, value) {
-  if (value > nrow(knnModel$examples$patterns)) stop("k > number of examples")
+  if (value > nrow(knnModel$examples$patterns)) stop("k > Number of examples")
   knnModel$k <- value
   knnModel
 }

@@ -8,7 +8,10 @@
 #' @param h A positive integer. Number of values to forecast.
 #' @param lags An integer vector in increasing order expressing the lags used
 #'     as autoregressive variables.
-#' @param k A positive integer. The k parameter in KNN regression.
+#' @param k A positive integer. The k parameter in KNN regression. A vector of
+#'     k values can also be used. In that case, the forecast is the average
+#'     of the forecasts produced by the different models with the different k
+#'     parameters.
 #' @param msas A string indicating the Multiple Step Ahead Strategy used when
 #'     more than one value is predicted. It can be "recursive" or "MIMO".
 #' @param cf A string. It indicates the combination function used to aggregate
@@ -39,7 +42,9 @@ knn_forecasting <- function(timeS, h, lags, k, msas = "MIMO",
     stop("Impossible to create one example")
 
   # Check k parameter
-  stopifnot(is.numeric(k), length(k) == 1, k >= 1)
+  stopifnot(is.numeric(k))
+  k <- sort(k)
+  if (k[1] < 1) stop("k values should be positive")
 
   # Check msas parameter
   stopifnot(msas %in% c("recursive", "MIMO"))
@@ -48,15 +53,25 @@ knn_forecasting <- function(timeS, h, lags, k, msas = "MIMO",
   stopifnot(cf %in% c("mean", "median"))
 
   if (msas == "recursive") {
-    fit <- knn_model(timeS, lags = lags, k = k , nt = 1, cf = cf)
-    pred <- recPrediction(fit, h = h)
-    prediction <- pred$prediction
+    p <- numeric(h)
+    fit <- knn_model(timeS, lags = lags, k = k[1] , nt = 1, cf = cf)
+    for (value in k) {
+      changeK(fit) <- value
+      pred <- recPrediction(fit, h = h)
+      p <- p + pred$prediction
+    }
+    prediction <- p / length(k)
     neighbors <- pred$neighbors
   } else { # MIMO
-    fit <- knn_model(timeS, lags = lags, k = k , nt = h, cf = cf)
+    fit <- knn_model(timeS, lags = lags, k = k[1] , nt = h, cf = cf)
     example <- as.vector(timeS[(length(timeS) + 1) - fit$lags])
-    reg <- regression(fit, example)
-    prediction <- reg$prediction
+    p <- numeric(h)
+    for (value in k) {
+      changeK(fit) <- value
+      reg <- regression(fit, example)
+      p <- p + reg$prediction
+    }
+    prediction <- p / length(k)
     neighbors <- reg$neighbors
   }
   temp <- stats::ts(1:2,
@@ -67,6 +82,7 @@ knn_forecasting <- function(timeS, h, lags, k, msas = "MIMO",
                           start = stats::end(temp),
                           frequency = stats::frequency(timeS)
   )
+  fit$k <- k
   structure(
     list(
       model = fit,
