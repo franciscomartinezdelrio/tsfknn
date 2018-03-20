@@ -58,7 +58,7 @@ autoplot.knnForecast <- function(forecast, highlight = "none", faceting = TRUE) 
   )
 
   if (highlight %in% c("neighbours", "neighbors")) {
-    if (ncol(forecast$model$examples$targets) == 1) {
+    if (forecast$msas == "recursive") {
       return(plot_recursive(timeS, pred, forecast, faceting))
      } else {
       return(plot_mimo(timeS, pred, forecast, faceting))
