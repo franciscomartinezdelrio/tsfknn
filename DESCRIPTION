@@ -25,3 +25,5 @@ Imports:
     stats,
     utils
 VignetteBuilder: knitr
+URL: https://github.com/franciscomartinezdelrio/tsfknn
+BugReports: https://github.com/franciscomartinezdelrio/tsfknn/issues
