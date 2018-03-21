@@ -2,6 +2,7 @@
 
 S3method(autoplot,knnForecast)
 S3method(plot,knnForecast)
+export(knn_examples)
 export(knn_forecasting)
 export(nearest_neighbors)
 importFrom(ggplot2,autoplot)
