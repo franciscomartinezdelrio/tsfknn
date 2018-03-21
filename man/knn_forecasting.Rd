@@ -14,7 +14,10 @@ knn_forecasting(timeS, h, lags, k, msas = "MIMO", cf = "mean")
 \item{lags}{An integer vector in increasing order expressing the lags used
 as autoregressive variables.}
 
-\item{k}{A positive integer. The k parameter in KNN regression.}
+\item{k}{A positive integer. The k parameter in KNN regression. A vector of
+k values can also be used. In that case, the forecast is the average
+of the forecasts produced by the different models with the differnt k
+parameters.}
 
 \item{msas}{A string indicating the Multiple Step Ahead Strategy used when
 more than one value is predicted. It can be "recursive" or "MIMO".}

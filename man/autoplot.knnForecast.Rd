@@ -14,9 +14,10 @@
 highlighted. Possible values are "none", "points" and
 "neighbors".}
 
-\item{faceting}{A logical scalar. This applies only if the \code{highlight}
-parameter is set to "neighbors". It determines whether the different
-nearest neighbors are seen in different plots (True) or in one plot.}
+\item{faceting}{Logical. This applies only if the \code{highlight}
+parameter is set to "neighbors". It indicates whether the different
+nearest neighbors should be seen in different plots (True) or in one
+plot.}
 }
 \value{
 The ggplot object representing a graph with the forecast.

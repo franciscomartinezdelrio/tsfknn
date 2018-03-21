@@ -15,6 +15,7 @@ regression.
    \item{knnForecasting}{It is used to forecast a time series}
    \item{nearest_neighbors}{To see the nearest neighbors used to
           forecast a times series}
+   \item{knn_examples}{To see the examples used by the KNN model}
    \item{autoplot}{To plot a prediction and the nearest neighbors
          used in the prediction}
 }
