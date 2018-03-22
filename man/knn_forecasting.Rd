@@ -4,7 +4,8 @@
 \alias{knn_forecasting}
 \title{Time series forecasting using KNN regression}
 \usage{
-knn_forecasting(timeS, h, lags, k, msas = "MIMO", cf = "mean")
+knn_forecasting(timeS, h, lags = NULL, k = NULL, msas = "MIMO",
+  cf = "mean")
 }
 \arguments{
 \item{timeS}{A numeric vector or time series of class \code{ts}.}

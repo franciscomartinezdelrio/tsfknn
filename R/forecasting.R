@@ -24,7 +24,7 @@
 #' pred$prediction # To see a time series with the forecasts
 #' plot(pred) # To see a plot with the forecast
 #' @export
-knn_forecasting <- function(timeS, h, lags, k, msas = "MIMO",
+knn_forecasting <- function(timeS, h, lags = NULL, k = NULL, msas = "MIMO",
                             cf = "mean") {
   # Check timeS parameter
   stopifnot(stats::is.ts(timeS) || is.vector(timeS, mode = "numeric"))
@@ -35,14 +35,21 @@ knn_forecasting <- function(timeS, h, lags, k, msas = "MIMO",
   stopifnot(is.numeric(h), length(h) == 1, h >= 1)
 
   # Check lags parameter
-  stopifnot(is.vector(lags, mode = "numeric"))
+  stopifnot(is.null(lags) || is.vector(lags, mode = "numeric"))
+  if (is.null(lags))
+    lags <- 1:stats::frequency(timeS)
   if (is.unsorted(lags)) stop("lags should be a vector in increasing order")
   stopifnot(lags[1] >= 1)
   if (utils::tail(lags, 1) + h > length(timeS))
     stop("Impossible to create one example")
 
   # Check k parameter
-  stopifnot(is.numeric(k))
+  stopifnot(is.null(k) || is.numeric(k))
+  if (is.null(k)) {
+    nexamples <- length(timeS) - utils::tail(lags, 1) -
+                 ifelse(msas == "MIMO", h, 1) + 1
+    k <- round(sqrt(nexamples))
+  }
   k <- sort(k)
   if (k[1] < 1) stop("k values should be positive")
 
