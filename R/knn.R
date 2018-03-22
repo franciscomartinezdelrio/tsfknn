@@ -15,9 +15,9 @@
 # build_examples(ts(1:5), lags = 2:1, nt = 2)
 # @export
 build_examples <- function(timeS, lags, nt = 1) {
-  MAXLAG <- lags[1]
-  NCOL = length(lags)
-  NROW = length(timeS) - MAXLAG - nt + 1
+  MAXLAG   <- lags[1]
+  NCOL     <- length(lags)
+  NROW     <- length(timeS) - MAXLAG - nt + 1
   patterns <- matrix(0, nrow = NROW, ncol = NCOL)
   targets  <- matrix(0, nrow = NROW, ncol = nt)
   targetsI <- vector(mode = "integer", length = NROW)
