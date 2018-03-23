@@ -219,6 +219,11 @@ pred$prediction
 plot(pred)
 ```
 
+## Automatic forecasting
+
+Sometimes a great number of time series have to be forecast. In that situation, an automatic way of generating the forecasts it is very useful. Our package is able to automatically choose *k* and the lags used as features. *k* is selected
+as the square root of the number of examples. The lags are selected as 1:*f*, where *f* es the number of periods in the time series, for example, 4 for quarterly data.
+
 
 
 # Conclusions
