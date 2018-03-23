@@ -1,6 +1,6 @@
 ---
 title: "Time Series Forecasting with KNN in R: the tsfknn Package"
-author: "Francisco Martinez, Maria P. Frias"
+author: "Francisco Martinez, Maria P. Frias, Maria D. Perez-Godoy, Antonio J. Rivera"
 date: "`r Sys.Date()`"
 output: 
   html_document:
