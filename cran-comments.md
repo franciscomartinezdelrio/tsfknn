@@ -1,5 +1,5 @@
 ## Test environments
-* local Windows install, R 3.4.3
+* local Windows install, R 3.4.4
 * win-builder (devel and release)
 * ubuntu 14.04.05 (on travis-ci), R 3.4.4
 
