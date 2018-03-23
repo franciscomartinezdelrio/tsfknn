@@ -1,20 +1,20 @@
 Package: tsfknn
 Type: Package
-Title: Time Series Forecasting Using KNN
+Title: Time Series Forecasting Using Nearest Neighbors
 Version: 0.1.0
 Authors@R: person("Francisco", "Martinez", email = "fmartin@ujaen.es",
     role = c("aut", "cre"))
-Description: tsfknn allows to forecast time series using KNN regression. When
-    the forecasting horizon is higher than 1, two multi step-ahead forecasting
-    strategies can be used. The model built is autoregressive, that is, it is
-    only based on the observations of the time series. The nearest neighbors
-    used in a prediction can be consulted and plotted.
+Description: This package allows to forecast time series using KNN regression. 
+    When the forecasting horizon is higher than 1, two multi step-ahead 
+    forecasting strategies can be used. The model built is autoregressive, 
+    that is, it is only based on the observations of the time series. The 
+    nearest neighbors used in a prediction can be consulted and plotted.
 Maintainer: Francisco Martinez <fmartin@ujaen.es>
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
-Depends: R (>= 3.4.3)
+Depends: R (>= 3.4.0)
 Suggests:
     knitr,
     rmarkdown,
