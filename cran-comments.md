@@ -14,4 +14,6 @@ This is a resubmission. In this version I have:
 * ubuntu 14.04.05 (on travis-ci), R 3.4.4
 
 ## R CMD check results
-There were no ERRORs, WARNINGs or NOTEs. 
+There were no ERRORs or WARNINGs. 
+
+The package is not on CRAN, I do not know whether this may cause 1 NOTE.
