@@ -7,10 +7,10 @@ Authors@R: person("Francisco", "Martinez", email = "fmartin@ujaen.es",
 Description: Allows to forecast time series using nearest neighbors regression
     Francisco Martinez, Maria P. Frias, Maria D. Perez-Godoy and Antonio J.
     Rivera (2017) <doi:10.1007/s10462-017-9593-z>. When the forecasting horizon
-    multi-step ahead forecasting strategies can be used. The model built is 
-    is higher than 1, two autoregressive, that is, it is only based on the 
-    observations of the time series. The nearest neighbors used in a 
-    prediction can be consulted and plotted.
+    is higher than 1, two multi-step ahead forecasting strategies can be used.
+    The model built is autoregressive, that is, it is only based on the 
+    observations of the time series. The nearest neighbors used in a prediction
+    can be consulted and plotted.
 Maintainer: Francisco Martinez <fmartin@ujaen.es>
 License: GPL-2
 Encoding: UTF-8
