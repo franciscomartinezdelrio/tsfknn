@@ -40,7 +40,7 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = NULL, msas = "MIMO",
     lags <- 1:stats::frequency(timeS)
   if (is.unsorted(lags)) stop("lags should be a vector in increasing order")
   stopifnot(lags[1] >= 1)
-  if (utils::tail(lags, 1) + h > length(timeS))
+  if (utils::tail(lags, 1) + ifelse(msas == "MIMO", h, 1) > length(timeS))
     stop("Impossible to create one example")
 
   # Check k parameter
