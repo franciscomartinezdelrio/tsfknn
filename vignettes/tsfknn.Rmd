@@ -27,7 +27,7 @@ multi-step ahead strategies and among different functions to aggregate the targe
 Time series forecasting has been performed traditionally using statistical methods such as ARIMA models or exponential smoothing. 
 However, the last decades have witnessed the use of computational intelligence
 techniques to forecast time series. Although artificial neural networks is the
-more prominent machine learning technique used in time series forecasting,
+most prominent machine learning technique used in time series forecasting,
 other approaches, such as Gaussian Processess or KNN, have also been applied.
 Compared with classical statistical models, computational intelligence methods exhibit interesting features, such as their nonlinearity or the lack of an underlying model, that is, they are non-parametric.
 
