@@ -123,8 +123,8 @@ autoplot(pred, highlight = "neighbors")
 
 As can be observed, each nearest neighbor has been plotted in a different plot (you can also select to get all the nearest neighbors in the same plot). The neighbors in the plots are sorted according to their distance to the instance, being the neighbor in the top plot the nearest neighbor.
 
-By the way, this artificial example of a time series with a constant lineal trend
-illustrates the fact that KNN is not suitable for prediciting time series with a global
+By the way, this artificial example of a time series with a constant linear trend
+illustrates the fact that KNN is not suitable for predicting time series with a global
 trend. This is because KNN predicts an aggregation of historical
 values of the time series. Therefore, in order to predict a time series with
 global trend some detrending scheme should be used.
@@ -167,7 +167,7 @@ autoplot(pred, highlight = "neighbors", faceting = FALSE)
 ```
 
 The prediction is the average of the target vectors of the two nearest neighbors. As can be observed, we have chosen to see all the nearest neighbors in the
-same graph. Because we are working with a monthly time series, we have thought that lags 1-12 are a suitable choice for selecting the features of the examples. In this case, the 12 last values of the time series are the new
+same graph. Because we are working with a monthly time series, we have thought that lags 1-12 are a suitable choice for selecting the features of the examples. In this case, the last 12 values of the time series are the new
 instance whose target has to be predicted. The two sequences of 12 consecutive
 values most similar to this instance are found (in blue) and their subsequent 12 values (in green) are averaged to obtain the prediction (in red).
 
