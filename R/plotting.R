@@ -64,9 +64,9 @@ autoplot.knnForecast <- function(forecast, highlight = "none", faceting = TRUE) 
               neighbors")
     } else if (forecast$msas == "recursive") {
       return(plot_recursive(timeS, pred, forecast, faceting))
-     } else {
+    } else {
       return(plot_mimo(timeS, pred, forecast, faceting))
-     }
+    }
   }
 
   p <- ggplot2::ggplot(timeS, ggplot2::aes_string('x', 'y'))
