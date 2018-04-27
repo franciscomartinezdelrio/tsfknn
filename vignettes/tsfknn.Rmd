@@ -18,7 +18,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 
 In this paper the **tsfknn** package for time series forecasting using KNN
-regression is described. The package allows, with only a function, to specify
+regression is described. The package allows, with only one function, to specify
 the KNN model and to generate the forecasts. The user can choose among different
 multi-step ahead strategies and among different functions to aggregate the targets of the nearest neighbors. It is also possible to consult the model used in the prediction and to obtain a graph including the forecast and the nearest neighbors used by KNN.
 
@@ -104,14 +104,14 @@ pred$prediction
 plot(pred)
 ```
 
-You can also consult how the prediction was made. That is, you can consult the instance whose target was predicted and its nearest neighbors. This information is obtained with the `nearest_neighbors` function applied to a `knnForecast`object:
+You can also consult how the prediction was made. That is, you can consult the instance whose target was predicted and its nearest neighbors. This information is obtained with the `nearest_neighbors` function applied to a `knnForecast` object:
 
 ```{r}
 nearest_neighbors(pred)
 ```
 
 Because we have used lags 1-2 as features, the features associated with the
-next future value of the time series are the two last values of the time series (vector 
+next future value of the time series are the last two values of the time series (vector 
 $[7, 8]$). The two most similar examples (nearest neighbors) of this instance are vectors
 $[6, 7]$ and $[5, 6]$, whose targets (8 and 7) are averaged to produce the
 prediction 7.5. You can obtain a nice graph including the instance, its  nearest neighbors and the prediction:
