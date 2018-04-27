@@ -138,7 +138,8 @@ plot_neighbours <- function(timeS, pred, pred2, example, features, targets,
   p <- p + ggplot2::geom_line()
 
   # plot the forecast
-  p <- p + ggplot2::geom_line(data = pred, colour = my_colours("red"))
+  if (nrow(pred) > 1)
+    p <- p + ggplot2::geom_line(data = pred, colour = my_colours("red"))
   p <- p + ggplot2::geom_point(ggplot2::aes(colour = "Forecast",
                                             shape = "Forecast"), data = pred2)
 
