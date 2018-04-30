@@ -2,7 +2,8 @@
 #'
 #' It applies KNN regression to forecast the future values of a time series.
 #' The lags used as autoregressive variables are set with the \code{lags}
-#' parameter.
+#' parameter. If the user does not set the number of nearest neighbors and
+#' the lags, these values are selected automatically.
 #'
 #' @param timeS A numeric vector or time series of class \code{ts}.
 #' @param h A positive integer. Number of values to forecast.
