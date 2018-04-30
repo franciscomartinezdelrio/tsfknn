@@ -191,7 +191,7 @@ In this example we have used lags 1-4 to specify the features of an example. To 
 
 # Additional features
 
-In this section several additional features of our packaged are described.
+In this section several additional features of our package are described.
 
 ## Combination and distance function
 
@@ -210,8 +210,7 @@ A third strategy is to use several KNN models with different *k* values. Each
 KNN 
 model generates its forecasts and the forecasts of the different models are 
 averaged to produce the final forecast. This strategy is based on the success of
-model combination in time series forecating. This way, the use of a time consuming optimization tool is avoided and the forecasts are not based on an unique, heuristic *k* value. Our package allows the use of this strategy 
-specifying a vector of *k* values:
+model combination in time series forecating. This way, the use of a time consuming optimization tool is avoided and the forecasts are not based on an unique, heuristic *k* value. In our package you can use of this strategy specifying a vector of *k* values:
 
 ```{r}
 pred <- knn_forecasting(ldeaths, h = 12, lags = 1:12, k = c(2, 4))
@@ -222,12 +221,12 @@ plot(pred)
 ## Automatic forecasting
 
 Sometimes a great number of time series have to be forecast. In that situation, an automatic way of generating the forecasts it is very useful. Our package is able to automatically choose *k* and the lags used as features. *k* is selected
-as the square root of the number of examples. The lags are selected as 1:*f*, where *f* es the number of periods in the time series, for example, 4 for quarterly data.
+as the square root of the number of examples. The lags are selected as 1:*f*, where *f* is the number of periods of the time series, for example, 4 for quarterly data.
 
 
 
 # Conclusions
 
 In R, just a few packages apply computational intelligence regression methods to time series forecasting. In this paper we have presented the **tsfknn** package that allows to forecast a time series using KNN regression. The interface of the
-package is quite simple, with only a function the user can specify a KNN model
+package is quite simple, with only one function the user can specify a KNN model
 and predict a time series. Furthermore, several graphs can be generated illustrating how the prediction has been computed.
