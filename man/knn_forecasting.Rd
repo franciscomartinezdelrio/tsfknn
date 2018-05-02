@@ -33,7 +33,8 @@ An object of class "knnForecast".
 \description{
 It applies KNN regression to forecast the future values of a time series.
 The lags used as autoregressive variables are set with the \code{lags}
-parameter.
+parameter. If the user does not set the number of nearest neighbors and
+the lags, these values are selected automatically.
 }
 \examples{
 pred <- knn_forecasting(USAccDeaths, h = 12, lags = 1:12, k = 2)

@@ -37,8 +37,18 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = NULL, msas = "MIMO",
 
   # Check lags parameter
   stopifnot(is.null(lags) || is.vector(lags, mode = "numeric"))
-  if (is.null(lags))
-    lags <- 1:stats::frequency(timeS)
+  if (is.null(lags)) {
+    if (stats::frequency(timeS) > 1) {
+      lags <- 1:stats::frequency(timeS)
+    } else {
+      partial <- pacf(timeS, plot = FALSE)
+      lags <- which(partial$acf > 2/sqrt(length(timeS)))
+      if (length(lags) == 0) {
+        lags = 1:5
+      }
+    }
+  }
+
   if (is.unsorted(lags)) stop("lags should be a vector in increasing order")
   stopifnot(lags[1] >= 1)
   if (utils::tail(lags, 1) + ifelse(msas == "MIMO", h, 1) > length(timeS))
