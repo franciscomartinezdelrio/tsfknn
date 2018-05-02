@@ -41,8 +41,8 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = NULL, msas = "MIMO",
     if (stats::frequency(timeS) > 1) {
       lags <- 1:stats::frequency(timeS)
     } else {
-      partial <- pacf(timeS, plot = FALSE)
-      lags <- which(partial$acf > 2/sqrt(length(timeS)))
+      partial <- stats::pacf(timeS, plot = FALSE)
+      lags <- which(partial$acf > 2/ sqrt(length(timeS)))
       if (length(lags) == 0) {
         lags = 1:5
       }
