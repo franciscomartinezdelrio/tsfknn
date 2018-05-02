@@ -47,9 +47,7 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = NULL, msas = "MIMO",
   # Check k parameter
   stopifnot(is.null(k) || is.numeric(k))
   if (is.null(k)) {
-    nexamples <- length(timeS) - utils::tail(lags, 1) -
-                 ifelse(msas == "MIMO", h, 1) + 1
-    k <- round(sqrt(nexamples))
+    k <- c(3, 5, 7)
   }
   k <- sort(k)
   if (k[1] < 1) stop("k values should be positive")
