@@ -13,7 +13,7 @@
 #'     k values can also be used. In that case, the forecast is the average
 #'     of the forecasts produced by the different models with the different k
 #'     parameters.
-#' @param msas A string indicating the Multiple Step Ahead Strategy used when
+#' @param msas A string indicating the Multiple-Step Ahead Strategy used when
 #'     more than one value is predicted. It can be "recursive" or "MIMO".
 #' @param cf A string. It indicates the combination function used to aggregate
 #'     the targets associated with the nearest neighbors. It can be "mean" or
