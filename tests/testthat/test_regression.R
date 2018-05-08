@@ -19,3 +19,14 @@ r <- list(
 test_that("knn regression with multiple targets", {
   expect_equal(regression(model, c(1, 2)), r)
 })
+
+model <- knn_model(ts(c(1, 2, 1, 5, 4, 0, 7, 1, 2)), lags = 1:2, k = 2,
+                   nt = 1, cf = "weighted")
+r <- list(
+  prediction = 1,
+  neighbors = c(3, 4)
+)
+
+test_that("knn regression with weighted combination and equal neighbor", {
+  expect_equal(regression(model, c(1, 2)), r)
+})

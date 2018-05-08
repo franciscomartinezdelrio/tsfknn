@@ -20,7 +20,7 @@ k values can also be used. In that case, the forecast is the average
 of the forecasts produced by the different models with the different k
 parameters.}
 
-\item{msas}{A string indicating the Multiple Step Ahead Strategy used when
+\item{msas}{A string indicating the Multiple-Step Ahead Strategy used when
 more than one value is predicted. It can be "recursive" or "MIMO".}
 
 \item{cf}{A string. It indicates the combination function used to aggregate

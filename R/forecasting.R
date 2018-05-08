@@ -17,7 +17,7 @@
 #'     more than one value is predicted. It can be "recursive" or "MIMO".
 #' @param cf A string. It indicates the combination function used to aggregate
 #'     the targets associated with the nearest neighbors. It can be "mean" or
-#'     "median".
+#'     "median" or "weighted.
 #' @return An object of class "knnForecast".
 #'
 #' @examples
@@ -66,7 +66,7 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = NULL, msas = "MIMO",
   stopifnot(msas %in% c("recursive", "MIMO"))
 
   # Check cb parameter
-  stopifnot(cf %in% c("mean", "median"))
+  stopifnot(cf %in% c("mean", "median", "weighted"))
 
   if (msas == "recursive") {
     p <- numeric(h)
