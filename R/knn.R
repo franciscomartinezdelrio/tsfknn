@@ -96,7 +96,7 @@ knn_model <- function(timeS, lags, k, nt = 1, cf = "mean") {
 # regression(model, c(1, 2))
 regression <- function(model, example) {
   distances <- apply(model$examples$patterns, 1,
-                     function(p) sqrt(sum((p - example) ^ 2)))
+                     function(p) sum((p - example) ^ 2))
   o <- order(distances)
   values <- model$examples$targets[o[1:model$k], , drop = F]
   if (model$cf == "mean") {
