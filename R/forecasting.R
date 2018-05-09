@@ -127,6 +127,41 @@ recPrediction <- function(model, h) {
   ))
 }
 
+#' Number of training examples
+#'
+#' It computes the number of training examples that would have a KNN model
+#' with the specified parameters.
+#'
+#' @inheritParams knn_forecasting
+#' @return An integer.
+#'
+#' @examples
+#' n_training_examples(ts(1:10), h = 2, lags = 1:3, msas = "MIMO")
+#' n_training_examples(ts(1:10), h = 2, lags = 1:3, msas = "recursive")
+#' @export
+n_training_examples <- function(timeS, h, lags, msas) {
+  # Check timeS parameter
+  stopifnot(stats::is.ts(timeS) || is.vector(timeS, mode = "numeric"))
+  if (! stats::is.ts(timeS))
+    timeS <- stats::as.ts(timeS)
+
+  # Check h parameter
+  stopifnot(is.numeric(h), length(h) == 1, h >= 1)
+
+  # Check lags parameter
+  stopifnot(is.vector(lags, mode = "numeric"))
+
+  if (is.unsorted(lags)) stop("lags should be a vector in increasing order")
+  stopifnot(lags[1] >= 1)
+  if (utils::tail(lags, 1) + ifelse(msas == "MIMO", h, 1) > length(timeS))
+    stop("Impossible to create one example")
+
+  # Check msas parameter
+  stopifnot(msas %in% c("recursive", "MIMO"))
+
+  length(timeS) - utils::tail(lags, 1) - ifelse(msas == "MIMO", h, 1) + 1
+}
+
 #' Nearest neighbors associated with predictions
 #'
 #' It allows to check the new instances and their nearest neighbors used in a
