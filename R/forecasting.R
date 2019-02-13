@@ -17,7 +17,7 @@
 #'     more than one value is predicted. It can be "recursive" or "MIMO".
 #' @param cf A string. It indicates the combination function used to aggregate
 #'     the targets associated with the nearest neighbors. It can be "mean" or
-#'     "median" or "weighted.
+#'     "median" or "weighted".
 #' @return An object of class "knnForecast".
 #'
 #' @examples
