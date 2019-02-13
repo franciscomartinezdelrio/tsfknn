@@ -7,7 +7,7 @@ The goal of tsfknn is to forecast time series using KNN regression
 
 ## Installation
 
-You can install tsfknn from from github with:
+You can install tsfknn from github with:
 
 ``` r
 # install.packages("devtools")
