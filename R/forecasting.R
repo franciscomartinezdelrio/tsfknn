@@ -16,7 +16,7 @@
 #' @param msas A string indicating the Multiple-Step Ahead Strategy used when
 #'     more than one value is predicted. It can be "recursive" or "MIMO".
 #' @param cf A string. It indicates the combination function used to aggregate
-#'     the targets associated with the nearest neighbors. It can be "mean" or
+#'     the targets associated with the nearest neighbors. It can be "mean",
 #'     "median" or "weighted".
 #' @return An object of class "knnForecast".
 #'
