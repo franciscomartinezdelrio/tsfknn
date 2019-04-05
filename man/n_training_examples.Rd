@@ -4,7 +4,7 @@
 \alias{n_training_examples}
 \title{Number of training examples}
 \usage{
-n_training_examples(timeS, h, lags, msas)
+n_training_examples(timeS, h, lags, msas = c("MIMO", "recursive"))
 }
 \arguments{
 \item{timeS}{A numeric vector or time series of class \code{ts}.}
@@ -15,7 +15,8 @@ n_training_examples(timeS, h, lags, msas)
 as autoregressive variables.}
 
 \item{msas}{A string indicating the Multiple-Step Ahead Strategy used when
-more than one value is predicted. It can be "recursive" or "MIMO".}
+more than one value is predicted. It can be "recursive" or "MIMO" (the
+default).}
 }
 \value{
 An integer.

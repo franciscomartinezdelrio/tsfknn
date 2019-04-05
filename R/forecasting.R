@@ -14,10 +14,11 @@
 #'     of the forecasts produced by the different models with the different k
 #'     parameters.
 #' @param msas A string indicating the Multiple-Step Ahead Strategy used when
-#'     more than one value is predicted. It can be "recursive" or "MIMO".
+#'     more than one value is predicted. It can be "recursive" or "MIMO" (the
+#'     default).
 #' @param cf A string. It indicates the combination function used to aggregate
-#'     the targets associated with the nearest neighbors. It can be "mean",
-#'     "median" or "weighted".
+#'     the targets associated with the nearest neighbors. It can be "median",
+#'     "weighted" or "mean" (the default).
 #' @return An object of class "knnForecast".
 #'
 #' @examples
@@ -25,8 +26,9 @@
 #' pred$prediction # To see a time series with the forecasts
 #' plot(pred) # To see a plot with the forecast
 #' @export
-knn_forecasting <- function(timeS, h, lags = NULL, k = NULL, msas = "MIMO",
-                            cf = "mean") {
+knn_forecasting <- function(timeS, h, lags = NULL, k = NULL,
+                            msas = c("MIMO", "recursive"),
+                            cf = c("mean", "median", "weighted")) {
   # Check timeS parameter
   stopifnot(stats::is.ts(timeS) || is.vector(timeS, mode = "numeric"))
   if (! stats::is.ts(timeS))
@@ -34,6 +36,9 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = NULL, msas = "MIMO",
 
   # Check h parameter
   stopifnot(is.numeric(h), length(h) == 1, h >= 1)
+
+  # msas parameter
+  msas <- match.arg(msas)
 
   # Check lags parameter
   stopifnot(is.null(lags) || is.vector(lags, mode = "numeric"))
@@ -62,11 +67,9 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = NULL, msas = "MIMO",
   k <- sort(k)
   if (k[1] < 1) stop("k values should be positive")
 
-  # Check msas parameter
-  stopifnot(msas %in% c("recursive", "MIMO"))
 
-  # Check cb parameter
-  stopifnot(cf %in% c("mean", "median", "weighted"))
+  # cf parameter
+  cf <- match.arg(cf)
 
   if (msas == "recursive") {
     p <- numeric(h)
@@ -139,7 +142,8 @@ recPrediction <- function(model, h) {
 #' n_training_examples(ts(1:10), h = 2, lags = 1:3, msas = "MIMO")
 #' n_training_examples(ts(1:10), h = 2, lags = 1:3, msas = "recursive")
 #' @export
-n_training_examples <- function(timeS, h, lags, msas) {
+n_training_examples <- function(timeS, h, lags,
+                                msas = c("MIMO", "recursive")) {
   # Check timeS parameter
   stopifnot(stats::is.ts(timeS) || is.vector(timeS, mode = "numeric"))
   if (! stats::is.ts(timeS))
@@ -151,13 +155,13 @@ n_training_examples <- function(timeS, h, lags, msas) {
   # Check lags parameter
   stopifnot(is.vector(lags, mode = "numeric"))
 
+  # Check msas parameter
+  msas <- match.arg(msas)
+
   if (is.unsorted(lags)) stop("lags should be a vector in increasing order")
   stopifnot(lags[1] >= 1)
   if (utils::tail(lags, 1) + ifelse(msas == "MIMO", h, 1) > length(timeS))
     stop("Impossible to create one example")
-
-  # Check msas parameter
-  stopifnot(msas %in% c("recursive", "MIMO"))
 
   length(timeS) - utils::tail(lags, 1) - ifelse(msas == "MIMO", h, 1) + 1
 }
