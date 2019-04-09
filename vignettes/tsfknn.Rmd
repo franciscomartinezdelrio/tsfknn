@@ -28,7 +28,7 @@ Time series forecasting has been performed traditionally using statistical metho
 However, the last decades have witnessed the use of computational intelligence
 techniques to forecast time series. Although artificial neural networks is the
 most prominent machine learning technique used in time series forecasting,
-other approaches, such as Gaussian Processess or KNN, have also been applied.
+other approaches, such as Gaussian Process or KNN, have also been applied.
 Compared with classical statistical models, computational intelligence methods exhibit interesting features, such as their nonlinearity or the lack of an underlying model, that is, they are non-parametric.
 
 Statistical methodologies for time series forecasting are present in CRAN as excellent packages. For example, the **forecast** package includes implementations of ARIMA, exponential smoothing, the theta method or basic techniques, such as the naive approach, that can be used as benchmark methods. On the other hand, although a great variety of computational intelligence approaches for regression are available in R (see, for example, the **caret** package), these approaches cannot be directly applied to time series forecasting. Fortunately, some new packages are filling this gap. For example,  the **nnfor** package or the `nnetar` function from the **forecast** package allow to predict time series using artificial neural networks.
@@ -97,7 +97,7 @@ Let us see the main arguments of this function:
 `knn_forecasting` is very handy because, as commented above, it builds the
 KNN model and then uses the model to predict the time series. This function
 returns a `knnForecast` object with information of the model and its 
-prediction. As we have seen above, you can use the function `knn_examples` to see the examples associated with the model. You can also consult the predicition or get a plot through the `knnForecast` object:
+prediction. As we have seen above, you can use the function `knn_examples` to see the examples associated with the model. You can also consult the prediction or get a plot through the `knnForecast` object:
 
 ```{r}
 pred$prediction
@@ -210,7 +210,7 @@ A third strategy is to use several KNN models with different *k* values. Each
 KNN 
 model generates its forecasts and the forecasts of the different models are 
 averaged to produce the final forecast. This strategy is based on the success of
-model combination in time series forecating. This way, the use of a time consuming optimization tool is avoided and the forecasts are not based on an unique, heuristic *k* value. In our package you can use of this strategy specifying a vector of *k* values:
+model combination in time series forecasting. This way, the use of a time consuming optimization tool is avoided and the forecasts are not based on an unique, heuristic *k* value. In our package you can use of this strategy specifying a vector of *k* values:
 
 ```{r}
 pred <- knn_forecasting(ldeaths, h = 12, lags = 1:12, k = c(2, 4))
