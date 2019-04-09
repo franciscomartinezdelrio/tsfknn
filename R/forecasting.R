@@ -104,6 +104,7 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = NULL,
   fit$k <- k
   structure(
     list(
+      call = match.call(),
       model = fit,
       msas = msas,
       prediction = prediction,

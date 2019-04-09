@@ -2,6 +2,9 @@
 
 S3method(autoplot,knnForecast)
 S3method(plot,knnForecast)
+S3method(print,knnForecast)
+S3method(print,summary.knnForecast)
+S3method(summary,knnForecast)
 export(knn_examples)
 export(knn_forecasting)
 export(n_training_examples)
