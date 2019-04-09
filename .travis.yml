@@ -7,3 +7,7 @@ sudo: required
 r:
   - release
   - devel
+
+# R dependencies for mldr
+r_packages:
+ - ggplot2
