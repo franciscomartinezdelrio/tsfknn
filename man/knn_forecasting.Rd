@@ -4,8 +4,8 @@
 \alias{knn_forecasting}
 \title{Time series forecasting using KNN regression}
 \usage{
-knn_forecasting(timeS, h, lags = NULL, k = NULL, msas = c("MIMO",
-  "recursive"), cf = c("mean", "median", "weighted"))
+knn_forecasting(timeS, h, lags = NULL, k = c(3, 5, 7),
+  msas = c("MIMO", "recursive"), cf = c("mean", "median", "weighted"))
 }
 \arguments{
 \item{timeS}{A numeric vector or time series of class \code{ts}.}
@@ -29,12 +29,23 @@ the targets associated with the nearest neighbors. It can be "median",
 "weighted" or "mean" (the default).}
 }
 \value{
-An object of class "knnForecast".
+An object of class \code{"knnForecast"}. The
+    function \code{\link[base]{summary}} can be used to obtain or print a
+    summary of the results.
+
+    An object of class \code{"knnForecast"} is a list containing at least
+    the following components:
+
+ \item{\code{call}}{the matched call.}
+ \item{\code{msas}}{the Multi-Step Ahead Strategy.}
+ \item{\code{prediction}}{a time series with the forecast.}
+ \item{\code{model}}{an object of class \code{"knnModel"} with the KNN
+                     model}
 }
 \description{
 It applies KNN regression to forecast the future values of a time series.
 The lags used as autoregressive variables are set with the \code{lags}
-parameter. If the user does not set the number of nearest neighbors and
+parameter. If the user does not set the number of nearest neighbors or
 the lags, these values are selected automatically.
 }
 \examples{

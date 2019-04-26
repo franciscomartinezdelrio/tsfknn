@@ -2,7 +2,7 @@
 #'
 #' It applies KNN regression to forecast the future values of a time series.
 #' The lags used as autoregressive variables are set with the \code{lags}
-#' parameter. If the user does not set the number of nearest neighbors and
+#' parameter. If the user does not set the number of nearest neighbors or
 #' the lags, these values are selected automatically.
 #'
 #' @param timeS A numeric vector or time series of class \code{ts}.
@@ -19,14 +19,25 @@
 #' @param cf A string. It indicates the combination function used to aggregate
 #'     the targets associated with the nearest neighbors. It can be "median",
 #'     "weighted" or "mean" (the default).
-#' @return An object of class "knnForecast".
+#' @return An object of class \code{"knnForecast"}. The
+#'     function \code{\link[base]{summary}} can be used to obtain or print a
+#'     summary of the results.
+#'
+#'     An object of class \code{"knnForecast"} is a list containing at least
+#'     the following components:
+#'
+#'  \item{\code{call}}{the matched call.}
+#'  \item{\code{msas}}{the Multi-Step Ahead Strategy.}
+#'  \item{\code{prediction}}{a time series with the forecast.}
+#'  \item{\code{model}}{an object of class \code{"knnModel"} with the KNN
+#'                      model}
 #'
 #' @examples
 #' pred <- knn_forecasting(USAccDeaths, h = 12, lags = 1:12, k = 2)
 #' pred$prediction # To see a time series with the forecasts
 #' plot(pred) # To see a plot with the forecast
 #' @export
-knn_forecasting <- function(timeS, h, lags = NULL, k = NULL,
+knn_forecasting <- function(timeS, h, lags = NULL, k = c(3, 5, 7),
                             msas = c("MIMO", "recursive"),
                             cf = c("mean", "median", "weighted")) {
   # Check timeS parameter
@@ -56,16 +67,13 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = NULL,
 
   if (is.unsorted(lags)) stop("lags should be a vector in increasing order")
   stopifnot(lags[1] >= 1)
-  if (utils::tail(lags, 1) + ifelse(msas == "MIMO", h, 1) > length(timeS))
-    stop("Impossible to create one example")
 
   # Check k parameter
-  stopifnot(is.null(k) || is.numeric(k))
-  if (is.null(k)) {
-    k <- c(3, 5, 7)
-  }
+  stopifnot(is.numeric(k))
   k <- sort(k)
   if (k[1] < 1) stop("k values should be positive")
+  if (utils::tail(k, 1) > n_training_examples(timeS, h, lags, msas))
+    stop(paste("Impossible to create", utils::tail(k, 1), "examples"))
 
 
   # cf parameter

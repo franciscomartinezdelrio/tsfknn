@@ -195,8 +195,8 @@ In this section several additional features of our package are described.
 
 ## Combination and distance function
 
-By default, the targets of the different nearest neighbors are averaged. However, it is possible to combine the targets using other aggregation functions. Currently, our package allows to choose among the mean and the 
-median function using the `cb` parameter of the `knn_forecasting` function.
+By default, the targets of the different nearest neighbors are averaged. However, it is possible to combine the targets using other aggregation functions. Currently, our package allows to choose among the mean, the 
+median and a weighted mean using the `cb` parameter of the `knn_forecasting` function.
 
 Regarding the distance function applied to compute the nearest neighbors, our package uses the Euclidean distance, although we can implement other distance metrics in the future.
 
@@ -227,6 +227,6 @@ as the square root of the number of examples. The lags are selected as 1:*f*, wh
 
 # Conclusions
 
-In R, just a few packages apply computational intelligence regression methods to time series forecasting. In this paper we have presented the **tsfknn** package that allows to forecast a time series using KNN regression. The interface of the
+In R, just a few packages apply regression methods based on computational intelligence to time series forecasting. In this paper we have presented the **tsfknn** package that allows to forecast a time series using KNN regression. The interface of the
 package is quite simple, with only one function the user can specify a KNN model
 and predict a time series. Furthermore, several graphs can be generated illustrating how the prediction has been computed.

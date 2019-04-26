@@ -91,7 +91,7 @@ print.summary.knnForecast <- function (x, ...) {
     cat("a weighted average.\n")
   }
   cat("Forecasting horizon:", length(x$prediction), "\n")
-  cat("Forcast:\n")
+  cat("Forecast:\n")
   print(x$prediction)
   invisible(x)
 }
