@@ -220,9 +220,14 @@ plot(pred)
 
 ## Automatic forecasting
 
-Sometimes a great number of time series have to be forecast. In that situation, an automatic way of generating the forecasts it is very useful. Our package is able to automatically choose *k* and the lags used as features. *k* is selected
-as the square root of the number of examples. The lags are selected as 1:*f*, where *f* is the number of periods of the time series, for example, 4 for quarterly data.
+Sometimes a great number of time series have to be forecast. In that situation, an automatic way of generating the forecasts is very useful. Our package is able to automatically choose all the KNN parameters. If the user only
+specifies the time series and the forecasting horizon the KNN parameters are selected as follows:
 
+* As multi-step ahead strategy MIMO is chosen (although the recursive strategy seems to be more effective).
+* The combination function used to aggregate the targets is the mean.
+\item *k* is selected as a combination of three models using 3, 5 and 7 nearest neighbors respectively.
+* The lags used as autoregressive features are 1:*f*, where *f* is the number of periods of the time series. For example, the lags for quarterly data are 1:4 and for monthly data 1:12. For time series in which the number of periods
+is one (for example, annual data) the lags with significant autocorrelation in the partial autocorrelation function (PACF) are selected. If no lag has a significant autocorrelation, then lags 1:5 are chosen.
 
 
 # Conclusions
