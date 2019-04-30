@@ -33,8 +33,8 @@ plot.knnForecast <- function(x, y, ...) {
 #'     "neighbors".
 #' @param faceting Logical. This applies only if the \code{highlight}
 #'     parameter is set to "neighbors". It indicates whether the different
-#'     nearest neighbors should be seen in different plots (True) or in one
-#'     plot.
+#'     nearest neighbors should be seen in different plots (\code{TRUE}) or in
+#'     one plot.
 #'
 #' @return The ggplot object representing a graph with the forecast.
 #'

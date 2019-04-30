@@ -16,8 +16,8 @@ highlighted. Possible values are "none", "points" and
 
 \item{faceting}{Logical. This applies only if the \code{highlight}
 parameter is set to "neighbors". It indicates whether the different
-nearest neighbors should be seen in different plots (True) or in one
-plot.}
+nearest neighbors should be seen in different plots (\code{TRUE}) or in
+one plot.}
 }
 \value{
 The ggplot object representing a graph with the forecast.

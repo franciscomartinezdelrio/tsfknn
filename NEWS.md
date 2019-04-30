@@ -1,3 +1,7 @@
+## tsfknn 0.3.0
+
+* Now it is possible to assess the model using rolling origin evaluation
+
 ## tsfknn 0.2.0
 
 * summary and print.summary methods are added for "knnForecast" objects
