@@ -47,8 +47,7 @@ The rest of the paper is organized as follows. Section 2 explains how
 KNN regression can be applied in a time series forecasting context using the
 **tsfknn** package. In Section
 3 the different multi-step ahead strategies implemented in our package are
-explained. Section 4 discusses some additional feature of our package and
-Section 5 draws some conclusions.
+explained. Section 4 discusses some additional feature of our package. In Section 5 describes how the forecast accuracy of a KNN model can be assessed using a rolling origin evaluation. Finally, Section 6 draws some conclusions.
 
 # Time series forecasting with KNN regression
 
