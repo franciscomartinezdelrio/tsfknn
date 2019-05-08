@@ -10,11 +10,7 @@ my_colours <- function(name) {
 #' @importFrom graphics plot
 #' @export
 plot.knnForecast <- function(x, y, ...) {
-  timeS <- c(x$model$ts, x$prediction)
-  timeS <- stats::ts(timeS,
-                     start = stats::start(x$model$ts),
-                     frequency = stats::frequency(x$model$ts)
-  )
+  timeS <- combine(x$model$ts, x$prediction)
   graphics::plot(timeS, type = "n", ylab = "")
   graphics::lines(x$model$ts, type = "o", pch = 20)
   graphics::lines(x$prediction, type = "o",

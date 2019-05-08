@@ -44,7 +44,7 @@ rolling_origin <- function(knnf, h = NULL) {
   predictions <- matrix(NA, nrow = h, ncol = h)
   ind <- 1
   for (hor in seq(h, 1)) {
-    training <- stats::ts(utils::head(timeS, - hor),
+    training <- stats::ts(utils::head(timeS, -hor),
                          start = stats::start(timeS),
                          frequency = stats::frequency(timeS)
     )
@@ -113,8 +113,8 @@ plot.knnForecastRO <- function(x, h = NULL, ...) {
   prediction <- timeS
   prediction[1:(length(timeS) - 1)] <- rep(NA, length(timeS) - 1)
   prediction[(length(timeS) - h + 1):length(timeS)] <-
-    x$predictions[nrow(x$test_sets) - h + 1, ]
-  graphics::lines(prediction, col = "red")
-  graphics::points(prediction, col = "red", pch = 20)
+    x$predictions[nrow(x$test_sets) - h + 1, 1:h]
+  graphics::lines(prediction, col = my_colours("red"))
+  graphics::points(prediction, col = my_colours("red"), pch = 20)
 }
 
