@@ -165,16 +165,24 @@ rolling_origin <- function(knnf, h = NULL, rolling = TRUE) {
 #'
 #' @export
 plot.knnForecastRO <- function(x, h = NULL, ...) {
+  # Check h parameter
   if (is.null(h))
     h <- ncol(x$test_sets)
   stopifnot(is.numeric(h), length(h) == 1, h >= 1, h <= ncol(x$test_sets))
+  if (nrow(x$test_sets) == 1) stopifnot(h == ncol(x$test_sets))
+
+  if (nrow(x$test_sets) == 1) {
+    the_row <- 1
+  } else {
+    the_row <- nrow(x$test_sets) - h + 1
+  }
 
   timeS <- x$knnf$model$ts
   graphics::plot(timeS, type = "o", pch = 20, ylab = "")
   prediction <- timeS
   prediction[1:(length(timeS) - 1)] <- rep(NA, length(timeS) - 1)
   prediction[(length(timeS) - h + 1):length(timeS)] <-
-    x$predictions[nrow(x$test_sets) - h + 1, 1:h]
+    x$predictions[the_row, 1:h]
   graphics::lines(prediction, col = my_colours("red"))
   graphics::points(prediction, col = my_colours("red"), pch = 20)
 }
