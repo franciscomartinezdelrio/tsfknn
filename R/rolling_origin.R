@@ -1,9 +1,9 @@
-#' Assessing accuracy with rolling origin
+#' Assessing forecasting accuracy with rolling origin
 #'
 #' It uses the model and the time series associated to the \code{knnForecast}
-#' object to asses the forecast accuracy of the model using the last \code{h}
-#' values of the time series to build test sets applying a rolling origin
-#' evaluation.
+#' object to asses the forecasting accuracy of the model using the last
+#' \code{h} values of the time series to build test sets applying a rolling
+#' origin evaluation.
 #'
 #' This function assess the forecast accuracy of the model used by the
 #' \code{knnForecast} object. It uses \code{h} different test and training
@@ -15,6 +15,9 @@
 #' @param knnf A \code{knnForecast} object.
 #' @param h A positive integer. The forecast horizon. If \code{NULL} the
 #'    prediction horizon of the \code{knnForecast} object is used.
+#' @param rolling A logical. If \code{TRUE} (the default), forecasting
+#'    horizons from 1 to \code{h} are used. Otherwise, only horizon
+#'    \code{h} is used.
 #' @return A list containing at least the following fields:
 #'
 #'  \item{\code{test_sets}}{a matrix containing the test sets used in the
@@ -31,7 +34,7 @@
 #' ro <- rolling_origin(pred)
 #' print(ro$global_accu)
 #' @export
-rolling_origin <- function(knnf, h = NULL) {
+rolling_origin <- function(knnf, h = NULL, rolling = TRUE) {
   # Check knnf parameter
   stopifnot(class(knnf) == "knnForecast")
 
@@ -39,11 +42,19 @@ rolling_origin <- function(knnf, h = NULL) {
   if (is.null(h)) h <- length(knnf$prediction)
   stopifnot(is.numeric(h), length(h) == 1, h >= 1)
 
+  # Check rolling parameter
+  stopifnot(is.logical(rolling), length(rolling) == 1)
+
+  if (rolling) {
+    horizons <- seq(h, 1)
+  } else {
+    horizons <- h
+  }
   timeS <- knnf$model$ts
-  test_sets <- matrix(NA, nrow = h, ncol = h)
-  predictions <- matrix(NA, nrow = h, ncol = h)
+  test_sets <- matrix(NA, nrow = length(horizons), ncol = h)
+  predictions <- test_sets
   ind <- 1
-  for (hor in seq(h, 1)) {
+  for (hor in horizons) {
     tt <- train_test(timeS, hor)
     pred <- knn_forecasting(tt$training,
                             h = hor,

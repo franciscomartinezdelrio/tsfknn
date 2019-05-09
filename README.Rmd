@@ -28,7 +28,7 @@ devtools::install_github("franciscomartinezdelrio/tsfknn")
 
 ## Example
 
-This is a basic example which shows you how to forecast with tsfknn:
+This is a basic example which shows how to forecast with tsfknn:
 
 ```{r example}
 library(tsfknn)

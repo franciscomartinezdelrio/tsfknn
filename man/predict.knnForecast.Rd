@@ -4,10 +4,10 @@
 \alias{predict.knnForecast}
 \title{Predict method for KNN models for time series forecasting.}
 \usage{
-\method{predict}{knnForecast}(model, h, ...)
+\method{predict}{knnForecast}(object, h, ...)
 }
 \arguments{
-\item{model}{a \code{knnForecast} object obtained by a call to the
+\item{object}{a \code{knnForecast} object obtained by a call to the
 \code{\link{knn_forecasting}} function.}
 
 \item{h}{an integer. The forecasting horizon.}

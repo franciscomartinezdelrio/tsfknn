@@ -2,15 +2,19 @@
 % Please edit documentation in R/rolling_origin.R
 \name{rolling_origin}
 \alias{rolling_origin}
-\title{Assessing accuracy with rolling origin}
+\title{Assessing forecasting accuracy with rolling origin}
 \usage{
-rolling_origin(knnf, h = NULL)
+rolling_origin(knnf, h = NULL, rolling = TRUE)
 }
 \arguments{
 \item{knnf}{A \code{knnForecast} object.}
 
 \item{h}{A positive integer. The forecast horizon. If \code{NULL} the
 prediction horizon of the \code{knnForecast} object is used.}
+
+\item{rolling}{A logical. If \code{TRUE} (the default), forecasting
+horizons from 1 to \code{h} are used. Otherwise, only horizon
+\code{h} is used.}
 }
 \value{
 A list containing at least the following fields:
@@ -26,9 +30,9 @@ A list containing at least the following fields:
 }
 \description{
 It uses the model and the time series associated to the \code{knnForecast}
-object to asses the forecast accuracy of the model using the last \code{h}
-values of the time series to build test sets applying a rolling origin
-evaluation.
+object to asses the forecasting accuracy of the model using the last
+\code{h} values of the time series to build test sets applying a rolling
+origin evaluation.
 }
 \details{
 This function assess the forecast accuracy of the model used by the

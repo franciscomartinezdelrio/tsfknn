@@ -114,7 +114,7 @@ regression <- function(model, example, k) {
 #' If the models uses the MIMO strategy for multiple-step ahead prediction,
 #' the forecasting horizon is fixed to the model forecasting horizon.
 #'
-#' @param model a \code{knnForecast} object obtained by a call to the
+#' @param object a \code{knnForecast} object obtained by a call to the
 #'    \code{\link{knn_forecasting}} function.
 #' @param h an integer. The forecasting horizon.
 #' @param ... further arguments passed to or from other methods.
@@ -129,29 +129,30 @@ regression <- function(model, example, k) {
 #' print(new_pred$prediction)
 #' plot(new_pred) # To see a plot with the forecast
 #'
+#' @importFrom stats predict
 #' @export
-predict.knnForecast <- function(model, h, ...) {
+predict.knnForecast <- function(object, h, ...) {
   # Check h parameter
   stopifnot(is.numeric(h), length(h) == 1, h >= 1)
 
-  k <- model$model$k
-  ts <- model$model$ts
-  if (model$msas == "recursive") {
+  k <- object$model$k
+  ts <- object$model$ts
+  if (object$msas == "recursive") {
     p <- numeric(h)
     for (value in k) {
-      pred <- recPrediction(model$model, h = h, k = value)
+      pred <- recPrediction(object$model, h = h, k = value)
       p <- p + pred$prediction
     }
     prediction <- p / length(k)
     neighbors <- pred$neighbors
   } else { # MIMO
-    hor = ncol(model$model$examples$targets)
+    hor = ncol(object$model$examples$targets)
     if (h != hor)
       stop(paste("The model only predicts horizon", hor))
-    example <- as.vector(ts[(length(ts) + 1) - model$model$lags])
+    example <- as.vector(ts[(length(ts) + 1) - object$model$lags])
     p <- numeric(h)
     for (value in k) {
-      reg <- regression(model$model, example, k = value)
+      reg <- regression(object$model, example, k = value)
       p <- p + reg$prediction
     }
     prediction <- p / length(k)
@@ -165,7 +166,7 @@ predict.knnForecast <- function(model, h, ...) {
             start = stats::end(temp),
             frequency = stats::frequency(ts)
   )
-  r <- model
+  r <- object
   r$prediction = prediction
   r$neighbors = neighbors
   r
