@@ -10,8 +10,9 @@
 #'          have a model}
 #'    \item{nearest_neighbors}{To see the nearest neighbors used to
 #'           forecast a times series}
+#'    \item{predict}{To make new forecasts}
 #'    \item{knn_examples}{To see the examples used by the KNN model}
-#'    \item{rolling_origin}{To assess forecast accuracy using rolling origin
+#'    \item{rolling_origin}{To assess forecasting accuracy using rolling origin
 #'          evaluation}
 #'    \item{autoplot}{To plot a prediction and the nearest neighbors
 #'          used in the prediction}

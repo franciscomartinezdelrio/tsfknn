@@ -57,7 +57,8 @@ knn_model <- function(timeS, lags, k, nt = 1, cf = "mean") {
   MAXLAG <- lags[1]
   if (MAXLAG + nt > length(timeS)) stop("Impossible to create one example")
   examples <- build_examples(timeS, lags, nt)
-  if (k > nrow(examples$patterns)) stop("k > number of examples")
+  if (utils::tail(k, 1) > nrow(examples$patterns))
+    stop("k > number of examples")
   structure(
     list(
       ts = timeS,
@@ -70,21 +71,6 @@ knn_model <- function(timeS, lags, k, nt = 1, cf = "mean") {
   )
 }
 
-# Change the k parameter of a KNN model.
-#
-# @param knnMod The KNN model.
-# @param value The new value of k.
-#
-# @export
-# @examples
-# model <- knn_model(ts(1:10), lags = 3:2, k = 3)
-# changeK(model) <-  4
-`changeK<-` <- function(knnModel, value) {
-  if (value > nrow(knnModel$examples$patterns)) stop("k > Number of examples")
-  knnModel$k <- value
-  knnModel
-}
-
 # Predicts one example doing KNN regression.
 #
 # @param model The KNN model (its class should be knnModel).
@@ -93,12 +79,12 @@ knn_model <- function(timeS, lags, k, nt = 1, cf = "mean") {
 # @export
 # @examples
 # model <- knn_model(ts(c(2, 3, 1, 5, 4, 0, 7, 1, 2)), lags = 1:2, k = 2)
-# regression(model, c(1, 2))
-regression <- function(model, example) {
+# regression(model, c(1, 2), k = 2)
+regression <- function(model, example, k) {
   distances <- apply(model$examples$patterns, 1,
                      function(p) sum((p - example) ^ 2))
   o <- order(distances)
-  values <- model$examples$targets[o[1:model$k], , drop = F]
+  values <- model$examples$targets[o[1:k], , drop = F]
   if (model$cf == "mean") {
     prediction <- unname(colMeans(values))
   } else if (model$cf == "median") {
@@ -107,16 +93,98 @@ regression <- function(model, example) {
     if (distances[o[1]] == 0) {
       prediction <- unname(values[1, ])
     } else {
-      reciprocal_d <- 1 / distances[o[1:model$k]]
+      reciprocal_d <- 1 / distances[o[1:k]]
       prediction <- numeric(ncol(model$example$targets))
-      for (k in seq(model$k)) {
-        prediction <- prediction + values[k, ] * reciprocal_d[k]
+      for (k_ in seq(k)) {
+        prediction <- prediction + values[k_, ] * reciprocal_d[k_]
       }
       prediction <- prediction / sum(reciprocal_d)
     }
   }
   list(
     prediction = prediction,
-    neighbors = model$examples$targetsI[o[1:model$k]]
+    neighbors = model$examples$targetsI[o[1:k]]
   )
 }
+
+#' Predict method for KNN models for time series forecasting.
+#'
+#' Predicted values based on a KNN model for time series forecasting.
+#'
+#' If the models uses the MIMO strategy for multiple-step ahead prediction,
+#' the forecasting horizon is fixed to the model forecasting horizon.
+#'
+#' @param model a \code{knnForecast} object obtained by a call to the
+#'    \code{\link{knn_forecasting}} function.
+#' @param h an integer. The forecasting horizon.
+#' @param ... further arguments passed to or from other methods.
+#'
+#' @return a \code{knnForecast} object with the prediction and information
+#' about the KNN model, see the documentation of \code{\link{knn_forecasting}}
+#' for the structure of \code{knnForecast} objects.
+#'
+#' @examples
+#' pred <- knn_forecasting(UKgas, h = 4, k = 1, msas = "recursive")
+#' new_pred <- predict(pred, h = 6)
+#' print(new_pred$prediction)
+#' plot(new_pred) # To see a plot with the forecast
+#'
+#' @export
+predict.knnForecast <- function(model, h, ...) {
+  # Check h parameter
+  stopifnot(is.numeric(h), length(h) == 1, h >= 1)
+
+  k <- model$model$k
+  ts <- model$model$ts
+  if (model$msas == "recursive") {
+    p <- numeric(h)
+    for (value in k) {
+      pred <- recPrediction(model$model, h = h, k = value)
+      p <- p + pred$prediction
+    }
+    prediction <- p / length(k)
+    neighbors <- pred$neighbors
+  } else { # MIMO
+    hor = ncol(model$model$examples$targets)
+    if (h != hor)
+      stop(paste("The model only predicts horizon", hor))
+    example <- as.vector(ts[(length(ts) + 1) - model$model$lags])
+    p <- numeric(h)
+    for (value in k) {
+      reg <- regression(model$model, example, k = value)
+      p <- p + reg$prediction
+    }
+    prediction <- p / length(k)
+    neighbors <- reg$neighbors
+  }
+  temp <- stats::ts(1:2,
+                    start = stats::end(ts),
+                    frequency = stats::frequency(ts)
+  )
+  prediction <- stats::ts(prediction,
+            start = stats::end(temp),
+            frequency = stats::frequency(ts)
+  )
+  r <- model
+  r$prediction = prediction
+  r$neighbors = neighbors
+  r
+}
+
+recPrediction <- function(model, h, k) {
+  prediction <- numeric(h)
+  neighbors <- matrix(nrow = h, ncol = k)
+  values <- as.vector(model$ts)
+  for (hor in 1:h) {
+    example <- values[(length(values) + 1) - model$lags]
+    reg <- regression(model, example, k)
+    prediction[hor] <- reg$prediction
+    neighbors[hor, ] <- reg$neighbors
+    values <- c(values, prediction[hor])
+  }
+  return(list(
+    prediction = prediction,
+    neighbors = neighbors
+  ))
+}
+

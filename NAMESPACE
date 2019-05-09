@@ -3,6 +3,7 @@
 S3method(autoplot,knnForecast)
 S3method(plot,knnForecast)
 S3method(plot,knnForecastRO)
+S3method(predict,knnForecast)
 S3method(print,knnForecast)
 S3method(print,summary.knnForecast)
 S3method(summary,knnForecast)

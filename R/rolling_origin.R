@@ -44,18 +44,14 @@ rolling_origin <- function(knnf, h = NULL) {
   predictions <- matrix(NA, nrow = h, ncol = h)
   ind <- 1
   for (hor in seq(h, 1)) {
-    training <- stats::ts(utils::head(timeS, -hor),
-                         start = stats::start(timeS),
-                         frequency = stats::frequency(timeS)
-    )
-    test <- utils::tail(timeS, hor)
-    pred <- knn_forecasting(training,
+    tt <- train_test(timeS, hor)
+    pred <- knn_forecasting(tt$training,
                             h = hor,
                             lags = rev(knnf$model$lags),
                             k = knnf$model$k,
                             msas = knnf$msas,
                             cf = knnf$model$cf)
-    test_sets[ind, 1:hor] <- test
+    test_sets[ind, 1:hor] <- tt$test
     predictions[ind, 1:hor] <- pred$prediction
     ind <- ind + 1
   }
@@ -90,6 +86,60 @@ rolling_origin <- function(knnf, h = NULL) {
     class = "knnForecastRO"
   )
 }
+
+# @export
+# rolling_origin2 <- function(knnf, h = NULL) {
+#   # Check knnf parameter
+#   stopifnot(class(knnf) == "knnForecast")
+#
+#   # Check h parameter
+#   if (is.null(h)) h <- length(knnf$prediction)
+#   stopifnot(is.numeric(h), length(h) == 1, h >= 1)
+#
+#   timeS <- knnf$model$ts
+#   test_sets <- matrix(NA, nrow = h, ncol = h)
+#   predictions <- matrix(NA, nrow = h, ncol = h)
+#   ind <- h
+#   for (hor in seq(h)) {
+#     tt <- train_test(timeS, hor)
+#     test_sets[ind, 1:hor] <- tt$test
+#     knnf$model$examples <- knnf$model$examples[1:(nrow(knnf$model$examples) - 1)]
+#     knnf$model$targets <- knnf$model$targets[1:(nrow(knnf$model$targets) - 1)]
+#     knnf$model$targetsI <- knnf$model$targetsI[1:(nrow(knnf$model$targetsI) - 1)]
+#     predictions[ind, 1:hor] <- pred$prediction
+#     ind <- ind - 1
+#   }
+#   colnames(test_sets)   <-  paste("h=", 1:h, sep = "")
+#   colnames(predictions) <-  paste("h=", 1:h, sep = "")
+#   errors <- test_sets - predictions
+#   g_rmse <- sqrt(mean(errors ^ 2, na.rm = TRUE))
+#   g_mae  <- mean(abs(errors), na.rm = TRUE)
+#   g_mape <- mean(abs(100*errors/test_sets), na.rm = TRUE)
+#   global_accu <- c(g_rmse, g_mae, g_mape)
+#   names(global_accu) <- c("RMSE", "MAE", "MAPE")
+#
+#   accu <- function(c) {
+#     rmse <- sqrt(mean(errors[, c] ^ 2, na.rm = TRUE))
+#     mae  <- mean(abs(errors[, c]), na.rm = TRUE)
+#     mape <- mean(abs(100*errors[, c]/test_sets[, c]), na.rm = TRUE)
+#     c(rmse, mae, mape)
+#   }
+#   h_accu <- sapply(1:h, accu)
+#   colnames(h_accu) <-  paste("h=", 1:h, sep = "")
+#   rownames(h_accu) <- c("RMSE", "MAE", "MAPE")
+#
+#   structure(
+#     list(
+#       knnf = knnf,
+#       test_sets = test_sets,
+#       predictions = predictions,
+#       errors = test_sets - predictions,
+#       global_accu = global_accu,
+#       h_accu = h_accu
+#     ),
+#     class = "knnForecastRO"
+#   )
+# }
 
 #' Plot a prediction of a test set
 #'

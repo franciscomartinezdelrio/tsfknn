@@ -80,63 +80,20 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = c(3, 5, 7),
   cf <- match.arg(cf)
 
   if (msas == "recursive") {
-    p <- numeric(h)
-    fit <- knn_model(timeS, lags = lags, k = k[1] , nt = 1, cf = cf)
-    for (value in k) {
-      changeK(fit) <- value
-      pred <- recPrediction(fit, h = h)
-      p <- p + pred$prediction
-    }
-    prediction <- p / length(k)
-    neighbors <- pred$neighbors
+    fit <- knn_model(timeS, lags = lags, k = k, nt = 1, cf = cf)
   } else { # MIMO
-    fit <- knn_model(timeS, lags = lags, k = k[1] , nt = h, cf = cf)
-    example <- as.vector(timeS[(length(timeS) + 1) - fit$lags])
-    p <- numeric(h)
-    for (value in k) {
-      changeK(fit) <- value
-      reg <- regression(fit, example)
-      p <- p + reg$prediction
-    }
-    prediction <- p / length(k)
-    neighbors <- reg$neighbors
+    fit <- knn_model(timeS, lags = lags, k = k, nt = h, cf = cf)
   }
-  temp <- stats::ts(1:2,
-                    start = stats::end(timeS),
-                    frequency = stats::frequency(timeS)
-  )
-  prediction <- stats::ts(prediction,
-                          start = stats::end(temp),
-                          frequency = stats::frequency(timeS)
-  )
   fit$k <- k
-  structure(
+  r <- structure(
     list(
       call = match.call(),
       model = fit,
-      msas = msas,
-      prediction = prediction,
-      neighbors = neighbors
+      msas = msas
     ),
     class = "knnForecast"
   )
-}
-
-recPrediction <- function(model, h) {
-  prediction <- numeric(h)
-  neighbors <- matrix(nrow = h, ncol = model$k)
-  values <- as.vector(model$ts)
-  for (hor in 1:h) {
-    example <- values[(length(values) + 1) - model$lags]
-    reg <- regression(model, example)
-    prediction[hor] <- reg$prediction
-    neighbors[hor, ] <- reg$neighbors
-    values <- c(values, prediction[hor])
-  }
-  return(list(
-    prediction = prediction,
-    neighbors = neighbors
-  ))
+  predict(r, h)
 }
 
 #' Number of training examples
