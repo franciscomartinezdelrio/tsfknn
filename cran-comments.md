@@ -1,7 +1,7 @@
 ## Test environments
-* local Windows install, R 3.5.3
+* local Windows install, R 3.6.0
 * win-builder (devel and release)
-* local Arch Linux, R 3.5.3 and devel
+* local Arch Linux, R 3.6.0 and devel
 
 ## R CMD check results
 There were no ERRORs, WARNINGs or NOTEs. 
