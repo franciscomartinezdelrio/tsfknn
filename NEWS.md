@@ -2,7 +2,7 @@
 
 * Now it is possible to assess the model using rolling origin evaluation
 * A predict method has been added to generate new forecasts based on a
-  built model
+  previously built model
 
 ## tsfknn 0.2.0
 
