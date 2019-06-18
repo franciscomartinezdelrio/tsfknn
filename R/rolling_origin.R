@@ -48,8 +48,6 @@ rolling_origin <- function(knnf, h = NULL, rolling = TRUE) {
                               lags = rev(knnf$model$lags),
                               msas = knnf$msas
   )
-  print(max_k)
-  print(nte)
   if (max_k > nte)
     stop(paste("Impossible to create", max_k, "examples"))
 
