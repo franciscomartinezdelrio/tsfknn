@@ -10,9 +10,9 @@ print.knnForecast <- function (x, ...) {
   )
   cat("Multiple-Step Ahead Strategy:", x$msas, "\n")
   if (length(x$model$k) == 1) {
-    cat("K (number of nearest neighors):", x$model$k, "\n")
+    cat("K (number of nearest neighbors):", x$model$k, "\n")
   } else {
-    cat("K (number of nearest neighors):",
+    cat("K (number of nearest neighbors):",
         length(x$model$k),
         "models with ")
     for (ind in seq_along(x$model$k)) {
@@ -24,7 +24,7 @@ print.knnForecast <- function (x, ...) {
         cat (",", x$model$k[ind])
       }
     }
-    cat(" neighbors repectively\n")
+    cat(" neighbors respectively\n")
   }
   cat("Autoregressive lags:", rev(x$model$lags), "\n")
   cat("Number of examples:", nrow(x$model$examples$patterns), "\n")
@@ -66,9 +66,9 @@ print.summary.knnForecast <- function (x, ...) {
   )
   cat("Multiple-Step Ahead Strategy:", x$msas, "\n")
   if (length(x$k) == 1) {
-    cat("K (number of nearest neighors):", x$k, "\n")
+    cat("K (number of nearest neighbors):", x$k, "\n")
   } else {
-    cat("K (number of nearest neighors):",
+    cat("K (number of nearest neighbors):",
         length(x$k),
         "models with ")
     for (ind in seq_along(x$k)) {
@@ -80,7 +80,7 @@ print.summary.knnForecast <- function (x, ...) {
         cat (",", x$k[ind])
       }
     }
-    cat(" neighbors repectively\n")
+    cat(" neighbors respectively\n")
   }
   cat("Autoregressive lags:", x$lags, "\n")
   cat("Number of examples:", x$nneighbors, "\n")
