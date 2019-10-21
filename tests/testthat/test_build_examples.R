@@ -1,4 +1,4 @@
-context("Build knn examples")
+context("Build KNN examples")
 
 patterns <- rbind(1:2, 2:3, 3:4)
 colnames(patterns) <- paste0("Lag", 2:1)

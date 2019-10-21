@@ -213,7 +213,7 @@ nearest_neighbors_mimo <- function(forecast) {
 #'
 #' @param forecast A \code{knnForecast} object.
 #' @return A matrix including the features and targets of the examples
-#'    associated with the model associated with a \code{knnForecast} object.
+#'    associated with the model of a \code{knnForecast} object.
 #'
 #' @examples
 #' pred <- knn_forecasting(ts(1:8), h = 1, lags = 1:2, k = 2)

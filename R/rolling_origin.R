@@ -1,11 +1,11 @@
 #' Assessing forecasting accuracy with rolling origin
 #'
-#' It uses the model and the time series associated to the \code{knnForecast}
+#' It uses the model and the time series associated with the \code{knnForecast}
 #' object to asses the forecasting accuracy of the model using the last
 #' \code{h} values of the time series to build test sets applying a rolling
 #' origin evaluation.
 #'
-#' This function assess the forecast accuracy of the model used by the
+#' This function assesses the forecast accuracy of the model used by the
 #' \code{knnForecast} object. It uses \code{h} different test and training
 #' sets. The first test set consists of the last \code{h} values of the time
 #' series (the training set is formed by the previous values). The next test
@@ -118,7 +118,7 @@ rolling_origin <- function(knnf, h = NULL, rolling = TRUE) {
 #' It uses a test set generated with the function \code{\link{rolling_origin}}
 #' and plots its forecast.
 #'
-#' @param x the object obtained from a call to x \code{\link{rolling_origin}}.
+#' @param x the object obtained from a call to \code{\link{rolling_origin}}.
 #'
 #' @param h an integer. The forecasting horizon. If \code{NULL}, the maximum
 #'    forecasting horizon of all the test sets is used.

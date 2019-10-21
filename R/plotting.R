@@ -32,7 +32,7 @@ plot.knnForecast <- function(x, y, ...) {
 #'     nearest neighbors should be seen in different plots (\code{TRUE}) or in
 #'     one plot.
 #'
-#' @return The ggplot object representing a graph with the forecast.
+#' @return The ggplot object representing a plotting with the forecast.
 #'
 #' @examples
 #' pred <- knn_forecasting(USAccDeaths, h = 12, lags = 1:12, k = 2)
