@@ -247,7 +247,7 @@ example, the test sets can be seen this way:
 print(ro$test_sets)
 ```
 
-Every row of the matrix contains a different test set. The first row is a test set with the last `h` values of the time series, the second row a test set with the last `h` -  1 values of the time series and so on. Each test set has an associated training test with all the data in the time series not belonging to the test set. For every training set a KNN model with the parameters associated to the original model is built and the test set is predicted. You can see the predictions as follows:
+Every row of the matrix contains a different test set. The first row is a test set with the last `h` values of the time series, the second row a test set with the last `h` -  1 values of the time series and so on. Each test set has an associated training test with all the data in the time series not belonging to the test set. For every training set a KNN model with the parameters associated with the original model is built and the test set is predicted. You can see the predictions as follows:
 
 ```{r}
 print(ro$predictions)
