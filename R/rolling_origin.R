@@ -66,19 +66,19 @@ rolling_origin <- function(knnf, h = NULL, rolling = TRUE) {
   for (hor in horizons) {
     tt <- train_test(timeS, hor)
     test_sets[ind, 1:hor] <- tt$test
-    if (knnf$msas == "MIMO" || length(horizons) == 1) {
-      pred <- knn_forecasting(tt$training,
+#   if (knnf$msas == "MIMO" || length(horizons) == 1) {
+    pred <- knn_forecasting(tt$training,
                             h = hor,
                             lags = rev(knnf$model$lags),
                             k = knnf$model$k,
                             msas = knnf$msas,
                             cf = knnf$model$cf)
-      predictions[ind, 1:hor] <- pred$prediction
-    } else { # optimization for recursive forecasting
-      knnf$model$examples$patterns <- knnf$model$examples$patterns[1:(nrow(knnf$model$examples$patterns) - 1), , drop = FALSE]
-      knnf$model$examples$targets <- knnf$model$examples$targets[1:(nrow(knnf$model$examples$targets) - 1), , drop = FALSE ]
-      predictions[ind, 1:hor] <- predict(knnf, h = hor)$prediction
-    }
+    predictions[ind, 1:hor] <- pred$prediction
+    # } else { # optimization for recursive forecasting
+    #   knnf$model$examples$patterns <- knnf$model$examples$patterns[1:(nrow(knnf$model$examples$patterns) - 1), , drop = FALSE]
+    #   knnf$model$examples$targets <- knnf$model$examples$targets[1:(nrow(knnf$model$examples$targets) - 1), , drop = FALSE ]
+    #   predictions[ind, 1:hor] <- predict(knnf, h = hor)$prediction
+    # }
     ind <- ind - 1
   }
   colnames(test_sets)   <-  paste("h=", 1:h, sep = "")

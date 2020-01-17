@@ -1,3 +1,7 @@
+## tsfknn 0.3.1
+
+* Fix calculation of rolling origin prediction with recursive strategy
+
 ## tsfknn 0.3.0
 
 * Now it is possible to assess the model using rolling origin evaluation

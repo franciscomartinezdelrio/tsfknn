@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 # tsfknn
 
-The goal of tsfknn is to forecast time series using KNN regression
+The goal of tsfknn is to forecast time series using KNN regression.
 
 ## Installation
 
