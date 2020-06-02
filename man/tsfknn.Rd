@@ -3,7 +3,6 @@
 \docType{package}
 \name{tsfknn}
 \alias{tsfknn}
-\alias{tsfknn-package}
 \title{tsfknn: A package for time series forecasting using KNN regression.}
 \description{
 The tsfknn package allows univariate time series forecasting using KNN

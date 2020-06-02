@@ -15,7 +15,7 @@ Maintainer: Francisco Martinez <fmartin@ujaen.es>
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Depends: R (>= 3.6.0)
 Suggests:
     knitr,

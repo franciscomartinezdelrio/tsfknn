@@ -7,7 +7,7 @@
 \method{plot}{knnForecastRO}(x, h = NULL, ...)
 }
 \arguments{
-\item{x}{the object obtained from a call to x \code{\link{rolling_origin}}.}
+\item{x}{the object obtained from a call to \code{\link{rolling_origin}}.}
 
 \item{h}{an integer. The forecasting horizon. If \code{NULL}, the maximum
 forecasting horizon of all the test sets is used.}

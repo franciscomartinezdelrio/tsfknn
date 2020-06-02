@@ -4,8 +4,7 @@
 \alias{autoplot.knnForecast}
 \title{Create a ggplot object from a knnForecast object}
 \usage{
-\method{autoplot}{knnForecast}(forecast, highlight = "none",
-  faceting = TRUE)
+\method{autoplot}{knnForecast}(forecast, highlight = "none", faceting = TRUE)
 }
 \arguments{
 \item{forecast}{The knnForecast object.}
@@ -20,7 +19,7 @@ nearest neighbors should be seen in different plots (\code{TRUE}) or in
 one plot.}
 }
 \value{
-The ggplot object representing a graph with the forecast.
+The ggplot object representing a plotting with the forecast.
 }
 \description{
 It uses a knnForecast object to create a ggplot object that plots a time
