@@ -21,3 +21,7 @@
 #' @docType package
 #' @name tsfknn
 NULL
+
+#' @useDynLib tsfknn
+#' @importFrom Rcpp sourceCpp
+NULL

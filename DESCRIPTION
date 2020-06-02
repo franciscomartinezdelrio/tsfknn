@@ -1,7 +1,7 @@
 Package: tsfknn
 Type: Package
 Title: Time Series Forecasting Using Nearest Neighbors
-Version: 0.3.1
+Version: 0.4
 Authors@R: person("Francisco", "Martinez", email = "fmartin@ujaen.es",
     role = c("aut", "cre"))
 Description: Allows to forecast time series using nearest neighbors regression
@@ -24,8 +24,11 @@ Suggests:
 Imports:
     ggplot2 (>= 3.1.1),
     graphics,
+    Rcpp,
     stats,
     utils
 VignetteBuilder: knitr
 URL: https://github.com/franciscomartinezdelrio/tsfknn
 BugReports: https://github.com/franciscomartinezdelrio/tsfknn/issues
+LinkingTo: 
+    Rcpp

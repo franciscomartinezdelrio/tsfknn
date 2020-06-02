@@ -81,19 +81,17 @@ knn_model <- function(timeS, lags, k, nt = 1, cf = "mean") {
 # model <- knn_model(ts(c(2, 3, 1, 5, 4, 0, 7, 1, 2)), lags = 1:2, k = 2)
 # regression(model, c(1, 2), k = 2)
 regression <- function(model, example, k) {
-  distances <- apply(model$examples$patterns, 1,
-                     function(p) sum((p - example) ^ 2))
-  o <- order(distances)
-  values <- model$examples$targets[o[1:k], , drop = F]
+  r <- first_n(model$examples$patterns, example, k)
+  values <- model$examples$targets[r$indexes, , drop = F]
   if (model$cf == "mean") {
     prediction <- unname(colMeans(values))
   } else if (model$cf == "median") {
     prediction <- apply(values, 2, stats::median)
   } else if (model$cf == "weighted") {
-    if (distances[o[1]] == 0) {
+    if (r$distances[r$indexes[1]] == 0) {
       prediction <- unname(values[1, ])
     } else {
-      reciprocal_d <- 1 / distances[o[1:k]]
+      reciprocal_d <- 1 / r$distances[r$indexes]
       prediction <- numeric(ncol(model$example$targets))
       for (k_ in seq(k)) {
         prediction <- prediction + values[k_, ] * reciprocal_d[k_]
@@ -103,7 +101,7 @@ regression <- function(model, example, k) {
   }
   list(
     prediction = prediction,
-    neighbors = model$examples$targetsI[o[1:k]]
+    neighbors = model$examples$targetsI[r$indexes]
   )
 }
 
