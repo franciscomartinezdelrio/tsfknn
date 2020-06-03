@@ -1,3 +1,7 @@
+## tsfknn 0.4 
+
+* Using Rcpp for faster computations
+
 ## tsfknn 0.3.1
 
 * Fix calculation of rolling origin prediction with recursive strategy

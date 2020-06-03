@@ -5,3 +5,7 @@ first_n <- function(m, v, k) {
     .Call('_tsfknn_first_n', PACKAGE = 'tsfknn', m, v, k)
 }
 
+build_examples2 <- function(timeS, lags, nt) {
+    .Call('_tsfknn_build_examples2', PACKAGE = 'tsfknn', timeS, lags, nt)
+}
+
