@@ -18,9 +18,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// build_examples2
+List build_examples2(NumericVector timeS, NumericVector lags, int nt);
+RcppExport SEXP _tsfknn_build_examples2(SEXP timeSSEXP, SEXP lagsSEXP, SEXP ntSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type timeS(timeSSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lags(lagsSEXP);
+    Rcpp::traits::input_parameter< int >::type nt(ntSEXP);
+    rcpp_result_gen = Rcpp::wrap(build_examples2(timeS, lags, nt));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tsfknn_first_n", (DL_FUNC) &_tsfknn_first_n, 3},
+    {"_tsfknn_build_examples2", (DL_FUNC) &_tsfknn_build_examples2, 3},
     {NULL, NULL, 0}
 };
 

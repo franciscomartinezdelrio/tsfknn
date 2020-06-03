@@ -1,7 +1,7 @@
 Package: tsfknn
 Type: Package
 Title: Time Series Forecasting Using Nearest Neighbors
-Version: 0.4
+Version: 0.4.0
 Authors@R: person("Francisco", "Martinez", email = "fmartin@ujaen.es",
     role = c("aut", "cre"))
 Description: Allows to forecast time series using nearest neighbors regression

@@ -1,0 +1,27 @@
+year <- sub("-.*", "", meta$Date)
+if(!length(year))
+  year <- substr(Sys.Date(),1,4)
+vers <- meta$Version
+if(is.null(vers))
+  vers <- packageVersion("tsfknn")
+vers <- paste("R package version", vers)
+
+# Grab authors from DESCRIPTION file
+# authors <- eval(parse(text=as.list(read.dcf("../DESCRIPTION")[1, ])$`Authors@R`))
+# authors <- authors[sapply(authors$role, function(roles) "aut" %in% roles)]
+# authors <- sapply(authors, function(author) paste(author$given, author$family))
+# authors <- paste(authors, collapse = " and ")
+
+citHeader("To cite the tsfknn package in publications, please use:")
+
+bibentry(bibtype = "Article",
+  title     = "{Time Series Forecasting with KNN in R: the tsfknn Package}",
+  author    = personList(as.person("Francisco Martinez"),
+                         as.person("Maria P Frias"),
+                         as.person("Francisco Charte"),
+                         as.person("Antonio J Rivera")),
+  journal   = "{The R Journal}",
+  volume    =  11,
+  number    =  2,
+  pages     = "229--242",
+  year      =  2019)
