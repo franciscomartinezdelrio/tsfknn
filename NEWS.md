@@ -1,6 +1,6 @@
 ## tsfknn 0.4 
 
-* Using Rcpp for faster computations
+* Using Rcpp for faster computation of nearest neighbors
 
 ## tsfknn 0.3.1
 
