@@ -24,9 +24,4 @@ bibentry(bibtype = "Article",
   volume    =  11,
   number    =  2,
   pages     = "229--242",
-<<<<<<< HEAD
   year      =  2019)
-=======
-  year      =  2019,
-  doi = "10.32614/RJ-2019-004")
->>>>>>> 36ca1120d58e6eaa82fc8b4f54ad6249187546ad
