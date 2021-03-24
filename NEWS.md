@@ -1,4 +1,11 @@
-## tsfknn 0.4 
+## tsfknn 0.5.0
+
+* The default Multi-step ahead strategy is recursive
+* An optional transformation to the training samples has been added. It improves forecast accuracy for time series with a trend
+* When several k are used, only those k that are equal or lower than
+the number of training samples are admitted
+
+## tsfknn 0.4.0
 
 * Using Rcpp for faster computation of nearest neighbors
 
@@ -15,7 +22,7 @@
 ## tsfknn 0.2.0
 
 * summary and print.summary methods are added for "knnForecast" objects
-* String parameters are processed with math.arg
+* String parameters are processed with match.arg
 * Fix calculation of how many KNN examples has the model in knn_forecasting
 * Weighted combination of the targets of nearest neighbors is implemented
 * A function that computes the number of training instances that would have 

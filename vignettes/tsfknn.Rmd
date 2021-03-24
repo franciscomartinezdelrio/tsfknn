@@ -72,7 +72,7 @@ In our package, you can consult the examples associated with a KNN model used fo
 
 ```{r}
 library(tsfknn)
-pred <- knn_forecasting(ts(1:8), h = 1, lags = 1:2, k = 2)
+pred <- knn_forecasting(ts(1:8), h = 1, lags = 1:2, k = 2, transform = "none")
 knn_examples(pred)
 ```
 
@@ -217,6 +217,19 @@ pred$prediction
 plot(pred)
 ```
 
+## Forecasting time series with a trend
+
+KNN is not suitable for forecasting a time series with a trend. The reason is simple, KNN predicts an average of historical values of the time series, so it cannot predict correctly values out of the range of the time series. In your time series has a trend we recommend using the parameter `transform` to transform the training samples. Use the value `"additive"`if the trend is additive or `"multiplicative"` for exponential time series:
+
+```{r}
+set.seed(5)
+timeS <- ts(1:10 + rnorm(10, 0, .2))
+pred <- knn_forecasting(timeS, h = 3, transform = "none")
+plot(pred)
+pred2 <- knn_forecasting(timeS, h = 3, transform = "additive")
+plot(pred2)
+```
+
 ## Automatic forecasting
 
 Sometimes a great number of time series have to be forecast. In that situation, an automatic way of generating the forecasts is very useful. Our package is able to automatically choose all the KNN parameters. If the user only
@@ -227,6 +240,7 @@ specifies the time series and the forecasting horizon the KNN parameters are sel
 \item *k* is selected as a combination of three models using 3, 5 and 7 nearest neighbors respectively.
 * The lags used as autoregressive features are 1:*f*, where *f* is the number of periods of the time series. For example, the lags for quarterly data are 1:4 and for monthly data 1:12. For time series in which the number of periods
 is one (for example, annual data) the lags with significant autocorrelation in the partial autocorrelation function (PACF) are selected. If no lag has a significant autocorrelation, then lags 1:5 are chosen.
+* The additive transformation is applied to the samples, so that a series with a trend can be properly forecasted.
 
 # Evaluating the model
 

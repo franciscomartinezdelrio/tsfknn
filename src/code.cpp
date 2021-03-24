@@ -37,8 +37,66 @@ List build_examples2(NumericVector timeS, NumericVector lags, int nt) {
   int row = 0;
   for (int ind = MAXLAG + nt -1; ind < timeS.size(); ++ind) {
     for (int col = 0; col < NCOL; ++col)
-       patterns(row, col) = timeS[ind - nt + 1 - lags[col]];
-    targets(row, _)  = timeS[Range(ind - nt + 1, ind + 1)];
+      patterns(row, col) = timeS[ind - nt + 1 - lags[col]];
+    targets(row, _) = timeS[Range(ind - nt + 1, ind + 1)];
+    targetsI[row] = ind - nt + 2;
+    row++;
+  }
+  List ret;
+  ret["patterns"] = patterns;
+  ret["targets"]  = targets;
+  ret["targetsI"] = targetsI;
+  return ret;
+}
+
+// [[Rcpp::export]]
+List build_examples_m(NumericVector timeS, NumericVector lags, int nt) {
+  const int MAXLAG = lags[0];
+  const int NCOL   = lags.size();
+  const int NROW   = timeS.size() - MAXLAG - nt + 1;
+  NumericMatrix patterns(NROW, NCOL);
+  NumericMatrix targets(NROW, nt);
+  IntegerVector targetsI(NROW);
+  int row = 0;
+  for (int ind = MAXLAG + nt -1; ind < timeS.size(); ++ind) {
+    double sum = 0;
+    for (int col = 0; col < NCOL; ++col) {
+      patterns(row, col) = timeS[ind - nt + 1 - lags[col]];
+      sum += patterns(row, col);
+    }
+    sum /= NCOL;
+    for (int col = 0; col < NCOL; ++col)
+      patterns(row, col) /= sum;
+    targets(row, _) = timeS[Range(ind - nt + 1, ind + 1)] / sum;
+    targetsI[row] = ind - nt + 2;
+    row++;
+  }
+  List ret;
+  ret["patterns"] = patterns;
+  ret["targets"]  = targets;
+  ret["targetsI"] = targetsI;
+  return ret;
+}
+
+// [[Rcpp::export]]
+List build_examples_a(NumericVector timeS, NumericVector lags, int nt) {
+  const int MAXLAG = lags[0];
+  const int NCOL   = lags.size();
+  const int NROW   = timeS.size() - MAXLAG - nt + 1;
+  NumericMatrix patterns(NROW, NCOL);
+  NumericMatrix targets(NROW, nt);
+  IntegerVector targetsI(NROW);
+  int row = 0;
+  for (int ind = MAXLAG + nt -1; ind < timeS.size(); ++ind) {
+    double sum = 0;
+    for (int col = 0; col < NCOL; ++col) {
+      patterns(row, col) = timeS[ind - nt + 1 - lags[col]];
+      sum += patterns(row, col);
+    }
+    sum /= NCOL;
+    for (int col = 0; col < NCOL; ++col)
+      patterns(row, col) -= sum;
+    targets(row, _) = timeS[Range(ind - nt + 1, ind + 1)] - sum;
     targetsI[row] = ind - nt + 2;
     row++;
   }
