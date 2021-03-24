@@ -72,7 +72,8 @@ rolling_origin <- function(knnf, h = NULL, rolling = TRUE) {
                             lags = rev(knnf$model$lags),
                             k = knnf$model$k,
                             msas = knnf$msas,
-                            cf = knnf$model$cf)
+                            cf = knnf$model$cf,
+                            transform = knnf$transform)
     predictions[ind, 1:hor] <- pred$prediction
     # } else { # optimization for recursive forecasting
     #   knnf$model$examples$patterns <- knnf$model$examples$patterns[1:(nrow(knnf$model$examples$patterns) - 1), , drop = FALSE]

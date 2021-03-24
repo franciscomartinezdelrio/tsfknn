@@ -7,12 +7,13 @@ expect_error(knn_forecasting(ts(1:5), h = 1, 0:2, 2))
 expect_error(knn_forecasting(ts(1:5), h = 1, lags = 3:5, k = 1))
 
 pred <- knn_forecasting(ts(c(2, 3, 1, 5, 4, 0, 7, 1, 2)), h = 2, lags = 1:2, k = 2,
-                        msas = "MIMO")
+                        msas = "MIMO", transform = "none")
 test_that("MIMO strategy predicts fine", {
   expect_equal(as.vector(pred$prediction), c(3, 4.5))
 })
 
-pred <- knn_forecasting(UKgas, h = 4, lags = 1:4, k = 2, msas = "MIMO")
+pred <- knn_forecasting(UKgas, h = 4, lags = 1:4, k = 2, msas = "MIMO",
+                        transform = "none")
 nn <- nearest_neighbors(pred)
 
 test_that("MIMO strategy predicts fine", {

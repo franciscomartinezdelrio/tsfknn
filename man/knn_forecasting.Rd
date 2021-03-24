@@ -9,8 +9,9 @@ knn_forecasting(
   h,
   lags = NULL,
   k = c(3, 5, 7),
-  msas = c("MIMO", "recursive"),
-  cf = c("mean", "median", "weighted")
+  msas = c("recursive", "MIMO"),
+  cf = c("mean", "median", "weighted"),
+  transform = c("additive", "multiplicative", "none")
 )
 }
 \arguments{
@@ -33,6 +34,11 @@ default).}
 \item{cf}{A string. It indicates the combination function used to aggregate
 the targets associated with the nearest neighbors. It can be "median",
 "weighted" or "mean" (the default).}
+
+\item{transform}{A character value indicating whether the training samples
+are transformed. If the time series has a trend it is recommended. By
+default is \code{"multiplicative"} (multiplicative transformation). It is also
+possible a multiplicative transformation or no transformation.}
 }
 \value{
 An object of class \code{"knnForecast"}. The

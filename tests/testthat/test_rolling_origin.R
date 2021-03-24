@@ -1,6 +1,6 @@
 context("Rolling origin function")
 
-pred <- knn_forecasting(ts(1:30), h = 4, msas = "recursive")
+pred <- knn_forecasting(ts(1:30), h = 4, msas = "recursive", transform = "none")
 ro <- rolling_origin(pred, h = 4)
 
 m <- matrix(c(27, 28, 29, 30, 28, 29, 30, NA, 29, 30, NA, NA, 30, NA, NA, NA),

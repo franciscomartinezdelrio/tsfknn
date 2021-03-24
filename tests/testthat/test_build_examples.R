@@ -13,7 +13,7 @@ result <- list(
 
 
 test_that("build_examples with one target", {
-  expect_equal(build_examples(ts(1:5), 2:1), result)
+  expect_equal(build_examples(ts(1:5), 2:1, transform = "none"), result)
 })
 
 patterns <- rbind(1:2, 2:3)
@@ -28,5 +28,5 @@ result <- list(
 )
 
 test_that("build_examples with two targets", {
-  expect_equal(build_examples(ts(1:5), 2:1, nt = 2), result)
+  expect_equal(build_examples(ts(1:5), 2:1, nt = 2, transform = "none"), result)
 })

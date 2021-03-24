@@ -19,6 +19,10 @@
 #' @param cf A string. It indicates the combination function used to aggregate
 #'     the targets associated with the nearest neighbors. It can be "median",
 #'     "weighted" or "mean" (the default).
+#' @param transform A character value indicating whether the training samples
+#'   are transformed. If the time series has a trend it is recommended. By
+#'   default is \code{"multiplicative"} (multiplicative transformation). It is also
+#'   possible a multiplicative transformation or no transformation.
 #' @return An object of class \code{"knnForecast"}. The
 #'     function \code{\link[base]{summary}} can be used to obtain or print a
 #'     summary of the results.
@@ -38,8 +42,9 @@
 #' plot(pred) # To see a plot with the forecast
 #' @export
 knn_forecasting <- function(timeS, h, lags = NULL, k = c(3, 5, 7),
-                            msas = c("MIMO", "recursive"),
-                            cf = c("mean", "median", "weighted")) {
+                            msas = c("recursive", "MIMO"),
+                            cf = c("mean", "median", "weighted"),
+                            transform = c("additive", "multiplicative", "none")) {
   # Check timeS parameter
   stopifnot(stats::is.ts(timeS) || is.vector(timeS, mode = "numeric"))
   if (! stats::is.ts(timeS))
@@ -50,6 +55,9 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = c(3, 5, 7),
 
   # msas parameter
   msas <- match.arg(msas)
+
+  # Check transform parameter
+  transform <- match.arg(transform)
 
   # Check lags parameter
   stopifnot(is.null(lags) || is.vector(lags, mode = "numeric"))
@@ -72,24 +80,36 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = c(3, 5, 7),
   stopifnot(is.numeric(k))
   k <- sort(k)
   if (k[1] < 1) stop("k values should be positive")
-  if (utils::tail(k, 1) > n_training_examples(timeS, h, lags, msas))
-    stop(paste("Impossible to create", utils::tail(k, 1), "examples"))
+  if (k[1] > n_training_examples(timeS, h, lags, msas)) {
+    stop(paste("Impossible to create", k[1], "examples"))
+  } else {
+    tmp <- k
+    k <- NULL
+    for (x in tmp)
+      if (x <= n_training_examples(timeS, h, lags, msas)) {
+        k <- c(k, x)
+      } else {
+        warning(paste("k =", x, "rejected: impossible to create",
+                      x, "examples"))
+      }
+  }
 
 
   # cf parameter
   cf <- match.arg(cf)
 
   if (msas == "recursive") {
-    fit <- knn_model(timeS, lags = lags, k = k, nt = 1, cf = cf)
+    fit <- knn_model(timeS, lags = lags, k = k, nt = 1, cf = cf, transform)
   } else { # MIMO
-    fit <- knn_model(timeS, lags = lags, k = k, nt = h, cf = cf)
+    fit <- knn_model(timeS, lags = lags, k = k, nt = h, cf = cf, transform)
   }
   fit$k <- k
   r <- structure(
     list(
       call = match.call(),
       model = fit,
-      msas = msas
+      msas = msas,
+      transformation = transform
     ),
     class = "knnForecast"
   )

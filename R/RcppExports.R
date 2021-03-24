@@ -9,3 +9,11 @@ build_examples2 <- function(timeS, lags, nt) {
     .Call('_tsfknn_build_examples2', PACKAGE = 'tsfknn', timeS, lags, nt)
 }
 
+build_examples_m <- function(timeS, lags, nt) {
+    .Call('_tsfknn_build_examples_m', PACKAGE = 'tsfknn', timeS, lags, nt)
+}
+
+build_examples_a <- function(timeS, lags, nt) {
+    .Call('_tsfknn_build_examples_a', PACKAGE = 'tsfknn', timeS, lags, nt)
+}
+

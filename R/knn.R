@@ -14,30 +14,32 @@
 # build_examples(ts(1:5), lags = 2:1)
 # build_examples(ts(1:5), lags = 2:1, nt = 2)
 # @export
-build_examples <- function(timeS, lags, nt = 1) {
+build_examples <- function(timeS, lags, nt = 1, transform) {
   # MAXLAG   <- lags[1]
   # NCOL     <- length(lags)
   # NROW     <- length(timeS) - MAXLAG - nt + 1
   # patterns <- matrix(0, nrow = NROW, ncol = NCOL)
   # targets  <- matrix(0, nrow = NROW, ncol = nt)
-  # targetsI <- vector(mode = "integer", length = NROW)
   # row <- 1
   # for (ind in seq(MAXLAG + nt, length(timeS))) {
-  #   patterns[row, ] <- timeS[ind - nt + 1 - lags]
-  #   targets[row, ] <- timeS[(ind - nt + 1):ind]
-  #   targetsI[row] <- ind - nt + 1
+  #   the_mean <- mean(timeS[ind - nt + 1 - lags])
+  #   patterns[row, ] <- timeS[ind - nt + 1 - lags] / the_mean
+  #   targets[row, ] <- timeS[(ind - nt + 1):ind] / the_mean
   #   row <- row + 1
   # }
-  r <- build_examples2(timeS, lags, nt)
-  # colnames(patterns) <- paste0("Lag", lags)
-  # colnames(targets)  <- paste0("H", 1:nt)
+  if (transform == "none") {
+    r <- build_examples2(timeS, lags, nt)
+  } else if (transform == "multiplicative") {
+    r <- build_examples_m(timeS, lags, nt)
+  }else if (transform == "additive") {
+    r <- build_examples_a(timeS, lags, nt)
+  }
   colnames(r$patterns) <- paste0("Lag", lags)
   colnames(r$targets)  <- paste0("H", 1:nt)
   r
   # list(
   #   patterns = patterns,
-  #   targets = targets,
-  #   targetsI = targetsI
+  #   targets = targets
   # )
 }
 
@@ -55,12 +57,12 @@ build_examples <- function(timeS, lags, nt = 1) {
 # @return An object of type knnModel.
 #
 # @export
-knn_model <- function(timeS, lags, k, nt = 1, cf = "mean") {
+knn_model <- function(timeS, lags, k, nt = 1, cf = "mean", transform) {
   lags <- rev(lags)
   stopifnot(utils::tail(lags, 1) >= 1)
   MAXLAG <- lags[1]
   if (MAXLAG + nt > length(timeS)) stop("Impossible to create one example")
-  examples <- build_examples(timeS, lags, nt)
+  examples <- build_examples(timeS, lags, nt, transform)
   if (utils::tail(k, 1) > nrow(examples$patterns))
     stop("k > number of examples")
   structure(
@@ -142,7 +144,7 @@ predict.knnForecast <- function(object, h, ...) {
   if (object$msas == "recursive") {
     p <- numeric(h)
     for (value in k) {
-      pred <- recPrediction(object$model, h = h, k = value)
+      pred <- recPrediction(object, h = h, k = value)
       p <- p + pred$prediction
     }
     prediction <- p / length(k)
@@ -152,9 +154,22 @@ predict.knnForecast <- function(object, h, ...) {
     if (h != hor)
       stop(paste("The model only predicts horizon", hor))
     example <- as.vector(ts[(length(ts) + 1) - object$model$lags])
+    if (object$transformation != "none") {
+      the_mean <- mean(example)
+      if (object$transformation == "multiplicative")
+        example <- example / the_mean
+      else
+        example <- example - the_mean
+    }
     p <- numeric(h)
     for (value in k) {
       reg <- regression(object$model, example, k = value)
+      if (object$transformation != "none") {
+        if (object$transformation == "multiplicative")
+          reg$prediction <- reg$prediction * the_mean
+        else
+          reg$prediction <- reg$prediction + the_mean
+      }
       p <- p + reg$prediction
     }
     prediction <- p / length(k)
@@ -174,14 +189,28 @@ predict.knnForecast <- function(object, h, ...) {
   r
 }
 
-recPrediction <- function(model, h, k) {
+recPrediction <- function(object, h, k) {
+  model <- object$model
   prediction <- numeric(h)
   neighbors <- matrix(nrow = h, ncol = k)
   values <- as.vector(model$ts)
   for (hor in 1:h) {
     example <- values[(length(values) + 1) - model$lags]
+    if (object$transformation != "none") {
+      the_mean <- mean(example)
+      if (object$transformation == "multiplicative")
+        example <- example / the_mean
+      else
+        example <- example - the_mean
+    }
     reg <- regression(model, example, k)
     prediction[hor] <- reg$prediction
+    if (object$transformation != "none") {
+      if (object$transformation == "multiplicative")
+        prediction[hor] <- prediction[hor] * the_mean
+      else
+        prediction[hor] <- prediction[hor] + the_mean
+    }
     neighbors[hor, ] <- reg$neighbors
     values <- c(values, prediction[hor])
   }
