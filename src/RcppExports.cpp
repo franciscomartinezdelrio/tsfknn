@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // first_n
 List first_n(NumericMatrix m, NumericVector v, int k);
 RcppExport SEXP _tsfknn_first_n(SEXP mSEXP, SEXP vSEXP, SEXP kSEXP) {

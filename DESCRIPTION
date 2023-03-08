@@ -1,12 +1,12 @@
 Package: tsfknn
 Type: Package
 Title: Time Series Forecasting Using Nearest Neighbors
-Version: 0.5.0
+Version: 0.5.1
 Authors@R: person("Francisco", "Martinez", email = "fmartin@ujaen.es",
     role = c("aut", "cre"))
 Description: Allows to forecast time series using nearest neighbors regression
     Francisco Martinez, Maria P. Frias, Maria D. Perez-Godoy and Antonio J.
-    Rivera (2017) <doi:10.1007/s10462-017-9593-z>. When the forecasting horizon
+    Rivera (2019) <doi:10.1007/s10462-017-9593-z>. When the forecasting horizon
     is higher than 1, two multi-step ahead forecasting strategies can be used.
     The model built is autoregressive, that is, it is only based on the 
     observations of the time series. The nearest neighbors used in a prediction
