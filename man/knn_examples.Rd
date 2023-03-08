@@ -11,7 +11,7 @@ knn_examples(forecast)
 }
 \value{
 A matrix including the features and targets of the examples
-   associated with the model of a \code{knnForecast} object.
+associated with the model of a \code{knnForecast} object.
 }
 \description{
 It allows to see the examples of the model associated to a

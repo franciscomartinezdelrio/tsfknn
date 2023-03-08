@@ -19,14 +19,14 @@ horizons from 1 to \code{h} are used. Otherwise, only horizon
 \value{
 A list containing at least the following fields:
 
- \item{\code{test_sets}}{a matrix containing the test sets used in the
-  evaluation. Every row contains a different test set.}
- \item{\code{predictions}}{The predictions for the test sets.}
- \item{\code{errors}}{The errors for the test sets.}
- \item{\code{global_accu}}{Different measures of accuracy applied to all the
- errors.}
- \item{\code{h_accu}}{Different measures of accuracy applied to all the
- errors for every forecasting horizon.}
+\item{\code{test_sets}}{a matrix containing the test sets used in the
+evaluation. Every row contains a different test set.}
+\item{\code{predictions}}{The predictions for the test sets.}
+\item{\code{errors}}{The errors for the test sets.}
+\item{\code{global_accu}}{Different measures of accuracy applied to all the
+errors.}
+\item{\code{h_accu}}{Different measures of accuracy applied to all the
+errors for every forecasting horizon.}
 }
 \description{
 It uses the model and the time series associated with the \code{knnForecast}

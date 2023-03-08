@@ -23,14 +23,17 @@ plot.knnForecast <- function(x, y, ...) {
 #' It uses a knnForecast object to create a ggplot object that plots a time
 #' series and its forecast using KNN regression.
 #'
-#' @param forecast The knnForecast object.
-#' @param highlight A string value indicating what elements should be
-#'     highlighted. Possible values are "none", "points" and
-#'     "neighbors".
-#' @param faceting Logical. This applies only if the \code{highlight}
-#'     parameter is set to "neighbors". It indicates whether the different
-#'     nearest neighbors should be seen in different plots (\code{TRUE}) or in
-#'     one plot.
+#' @details Commonly used parameters are:
+#'
+#' * `highlight`. A character string indicating what elements should be highlighted. Possible values are
+#'   `"none"`, `"points"` and `"neighbors"` The default value is `"none"`.
+#' * `faceting`. Logical. This applies only if the `highlight` parameter is
+#'   set to `"neighbors"`. It indicates whether the different nearest neighbors
+#'   should be seen in different plots (`TRUE`, the default value) or in one
+#'   plot.
+#'
+#' @param object An object of class `knnForecast`.
+#' @param ... additional parameter, see details.
 #'
 #' @return The ggplot object representing a plotting with the forecast.
 #'
@@ -41,7 +44,23 @@ plot.knnForecast <- function(x, y, ...) {
 #' autoplot(pred, highlight = "neighbors")
 #' @export
 #' @importFrom ggplot2 autoplot
-autoplot.knnForecast <- function(forecast, highlight = "none", faceting = TRUE) {
+autoplot.knnForecast <- function(object, ...) {
+  # check ... parameter
+  l <- list(...)
+  if (length(l) > 0) {
+    valid_n <- c("highlight", "faceting") # valid parameter names, apart from object
+    if(! all(names(l) %in% valid_n))
+      stop(paste0("Parameters ", setdiff(names(l), valid_n), " not supported"))
+    if ("highlight" %in% names(l) && (!is.character(l$highlight) || length(l$highlight) > 1))
+      stop("highlight parameter should be character string of length 1")
+    if ("faceting" %in% names(l) && (!is.logical(l$faceting) || length(l$faceting) > 1))
+      stop("faceting parameter should be a logical value")
+  }
+
+  forecast <- object
+  highlight <- if ("highlight" %in% names(l)) l$highlight else "none"
+  faceting <- if ("faceting" %in% names(l)) l$faceting else TRUE
+
   # extract the time series
   timeS <- data.frame(
     x = as.vector(stats::time(forecast$model$ts)),
