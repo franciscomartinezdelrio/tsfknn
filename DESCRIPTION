@@ -14,7 +14,8 @@ Description: Allows to forecast time series using nearest neighbors regression
 Maintainer: Francisco Martinez <fmartin@ujaen.es>
 License: GPL-2
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
 Depends: R (>= 3.6.0)
 Suggests:
     knitr,

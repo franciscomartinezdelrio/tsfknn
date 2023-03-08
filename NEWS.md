@@ -1,3 +1,7 @@
+## tsfknn 0.5.1
+
+* autoplot.knnForecast has been modified to comply with CRAN
+
 ## tsfknn 0.5.0
 
 * The default Multi-step ahead strategy is recursive

@@ -11,7 +11,7 @@ nearest_neighbors(forecast)
 }
 \value{
 A list including the new instances used in KNN regression and their
-   nearest neighbors.
+nearest neighbors.
 }
 \description{
 It allows to check the new instances and their nearest neighbors used in a

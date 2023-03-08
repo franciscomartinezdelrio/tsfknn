@@ -42,17 +42,18 @@ possible a multiplicative transformation or no transformation.}
 }
 \value{
 An object of class \code{"knnForecast"}. The
-    function \code{\link[base]{summary}} can be used to obtain or print a
-    summary of the results.
+function \code{\link[base]{summary}} can be used to obtain or print a
+summary of the results.
 
-    An object of class \code{"knnForecast"} is a list containing at least
-    the following components:
+\if{html}{\out{<div class="sourceCode">}}\preformatted{An object of class \code{"knnForecast"} is a list containing at least
+the following components:
+}\if{html}{\out{</div>}}
 
- \item{\code{call}}{the matched call.}
- \item{\code{msas}}{the Multi-Step Ahead Strategy.}
- \item{\code{prediction}}{a time series with the forecast.}
- \item{\code{model}}{an object of class \code{"knnModel"} with the KNN
-                     model}
+\item{\code{call}}{the matched call.}
+\item{\code{msas}}{the Multi-Step Ahead Strategy.}
+\item{\code{prediction}}{a time series with the forecast.}
+\item{\code{model}}{an object of class \code{"knnModel"} with the KNN
+model}
 }
 \description{
 It applies KNN regression to forecast the future values of a time series.

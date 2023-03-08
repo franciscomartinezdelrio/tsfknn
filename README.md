@@ -1,9 +1,3 @@
-<!-- badges: start -->
-[![R-CMD-check](https://github.com/franciscomartinezdelrio/tsfknn/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/franciscomartinezdelrio/tsfknn/actions/workflows/R-CMD-check.yaml)
-<!-- badges: end -->
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # tsfknn
 
 The goal of tsfknn is to forecast time series using KNN regression
