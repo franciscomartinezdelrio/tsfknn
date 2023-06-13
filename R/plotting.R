@@ -26,7 +26,7 @@ plot.knnForecast <- function(x, y, ...) {
 #' @details Commonly used parameters are:
 #'
 #' * `highlight`. A character string indicating what elements should be highlighted. Possible values are
-#'   `"none"`, `"points"` and `"neighbors"` The default value is `"none"`.
+#'   `"none"`, `"points"` and `"neighbors"`. The default value is `"none"`.
 #' * `faceting`. Logical. This applies only if the `highlight` parameter is
 #'   set to `"neighbors"`. It indicates whether the different nearest neighbors
 #'   should be seen in different plots (`TRUE`, the default value) or in one

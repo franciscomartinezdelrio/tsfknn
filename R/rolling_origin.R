@@ -43,7 +43,9 @@ rolling_origin <- function(knnf, h = NULL, rolling = TRUE) {
   stopifnot(is.numeric(h), length(h) == 1, h >= 1)
 
   max_k <- utils::tail(knnf$model$k, 1)
-  nte <-  n_training_examples(utils::head(knnf$model$ts, -h),
+  nte <-  n_training_examples(ts(utils::head(knnf$model$ts, -h),
+                                 start = start(knnf$model$ts),
+                                 frequency = frequency(knnf$model$ts)),
                               h = h,
                               lags = rev(knnf$model$lags),
                               msas = knnf$msas
