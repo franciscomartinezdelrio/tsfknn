@@ -22,7 +22,7 @@ series and its forecast using KNN regression.
 Commonly used parameters are:
 \itemize{
 \item \code{highlight}. A character string indicating what elements should be highlighted. Possible values are
-\code{"none"}, \code{"points"} and \code{"neighbors"} The default value is \code{"none"}.
+\code{"none"}, \code{"points"} and \code{"neighbors"}. The default value is \code{"none"}.
 \item \code{faceting}. Logical. This applies only if the \code{highlight} parameter is
 set to \code{"neighbors"}. It indicates whether the different nearest neighbors
 should be seen in different plots (\code{TRUE}, the default value) or in one
