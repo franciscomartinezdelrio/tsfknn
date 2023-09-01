@@ -1,6 +1,7 @@
 # tsfknn 0.5.2
 
 * bug fixed in rolling_origin
+* modifying tsfknn-package.R to comply with CRAN
 
 # tsfknn 0.5.1
 
