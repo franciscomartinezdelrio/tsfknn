@@ -1,5 +1,5 @@
 ## Test environments
-* local Windows install, R 4.3.1
+* local Windows install, R 4.3.2
 * Windows Server 
 * Ubuntu Linux 
 * MacOS
