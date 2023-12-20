@@ -5,6 +5,7 @@
   and the additive or multiplicative transformation
 * It is not allowed only one autoregressive lag and the additive or
   multiplicative transformation
+* More information in the vignette about transformations  
 
 # tsfknn 0.5.2
 

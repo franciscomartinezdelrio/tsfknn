@@ -18,8 +18,8 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 
 In this paper the **tsfknn** package for time series forecasting using KNN
-regression is described. The package allows, with only one function, to specify
-the KNN model and to generate the forecasts. The user can choose among different
+regression is described. The package allows, with only one function, specifying
+the KNN model and generating the forecasts. The user can choose among different
 multi-step ahead strategies and among different functions to aggregate the targets of the nearest neighbors. It is also possible to consult the model used in the prediction and to obtain a graph including the forecast and the nearest neighbors used by KNN.
 
 # Introduction
@@ -31,7 +31,7 @@ most prominent machine learning technique used in time series forecasting,
 other approaches, such as Gaussian Process or KNN, have also been applied.
 Compared with classical statistical models, computational intelligence methods exhibit interesting features, such as their nonlinearity or the lack of an underlying model, that is, they are non-parametric.
 
-Statistical methodologies for time series forecasting are present in CRAN as excellent packages. For example, the **forecast** package includes implementations of ARIMA, exponential smoothing, the theta method or basic techniques, such as the naive approach, that can be used as benchmark methods. On the other hand, although a great variety of computational intelligence approaches for regression are available in R (see, for example, the **caret** package), these approaches cannot be directly applied to time series forecasting. Fortunately, some new packages are filling this gap. For example,  the **nnfor** package or the `nnetar` function from the **forecast** package allow to predict time series using artificial neural networks.
+Statistical methodologies for time series forecasting are present in CRAN as excellent packages. For example, the **forecast** package includes implementations of ARIMA, exponential smoothing, the theta method or basic techniques, such as the naive approach, that can be used as benchmark methods. On the other hand, although a great variety of computational intelligence approaches for regression are available in R (see, for example, the **caret** package), these approaches cannot be directly applied to time series forecasting. Fortunately, some new packages are filling this gap. For example,  the **nnfor** package or the `nnetar` function from the **forecast** package allows us to predict time series using artificial neural networks.
 
 KNN is a very popular algorithm used in classification and regression.
 This algorithm simply stores a collection of examples. Each
@@ -47,7 +47,7 @@ The rest of the paper is organized as follows. Section 2 explains how
 KNN regression can be applied in a time series forecasting context using the
 **tsfknn** package. In Section
 3 the different multi-step ahead strategies implemented in our package are
-explained. Section 4 discusses some additional feature of our package. In Section 5 describes how the forecast accuracy of a KNN model can be assessed using a rolling origin evaluation. Finally, Section 6 draws some conclusions.
+explained. Section 4 discusses some additional feature of our package. Section 5 describes how the forecast accuracy of a KNN model can be assessed using a rolling origin evaluation. Finally, Section 6 draws some conclusions.
 
 # Time series forecasting with KNN regression
 
@@ -81,19 +81,13 @@ the function `knn_forecasting` that builds a model associated with a time
 series and uses the model to predict the future values of the time series.
 Let us see the main arguments of this function:
 
-`timeS`
-    : the time series to be forecast.
-
-`h`
-    : the forecast horizon, that is, the number of future values to be predicted.
+* `timeS`: the time series to be forecast.
+* `h`: the forecast horizon, that is, the number of future values to be predicted.
+* `lags`: an integer vector indicating the lagged values of the target used as features in the examples (for instance, 1:2 means that lagged values 1 and 2 should be used).
+* `k`: the number of nearest neighbors used by the KNN model.
+* `transform`: set the kind of transformation applied to the examples and their targets. In general, it is useful to forecast time series with a trend. It will be explained later.
     
-`lags`
-    : an integer vector indicating the lagged values of the target used as features in the examples (for instance, 1:2 means that lagged values 1 and 2 should be used).
-
-`k`
-    : the number of nearest neighbors used by the KNN model.
-    
-`knn_forecasting` is very handy because, as commented above, it builds the
+`knn_forecasting` is very handy because, as mentioned above, it builds the
 KNN model and then uses the model to predict the time series. This function
 returns a `knnForecast` object with information of the model and its 
 prediction. As we have seen above, you can use the function `knn_examples` to see the examples associated with the model. You can also consult the prediction or get a plot through the `knnForecast` object:
@@ -113,7 +107,7 @@ Because we have used lags 1-2 as features, the features associated with the
 next future value of the time series are the last two values of the time series (vector 
 $[7, 8]$). The two most similar examples (nearest neighbors) of this instance are vectors
 $[6, 7]$ and $[5, 6]$, whose targets (8 and 7) are averaged to produce the
-prediction 7.5. You can obtain a nice graph including the instance, its  nearest neighbors and the prediction:
+prediction 7.5. You can obtain a nice plot including the instance, its  nearest neighbors and the prediction:
 
 ```{r}
 library(ggplot2)
@@ -166,15 +160,15 @@ autoplot(pred, highlight = "neighbors", faceting = FALSE)
 ```
 
 The prediction is the average of the target vectors of the two nearest neighbors. As can be observed, we have chosen to see all the nearest neighbors in the
-same graph. Because we are working with a monthly time series, we have thought that lags 1-12 are a suitable choice for selecting the features of the examples. In this case, the last 12 values of the time series are the new
+same plot. Because we are working with a monthly time series, we have thought that lags 1-12 are a suitable choice for selecting the features of the examples. In this case, the last 12 values of the time series are the new
 instance whose target has to be predicted. The two sequences of 12 consecutive
 values most similar to this instance are found (in blue) and their subsequent 12 values (in green) are averaged to obtain the prediction (in red).
 
 ## The recursive strategy
 
 The recursive or iterative strategy is the approach used by ARIMA or 
-exponential smoothing to forecast several periods. Basically, a model
-that only forecasts one-step ahead is used, so that the model is applied iteratively to forecast all the future periods. When historical observations to be used as features of the new instance are unavailable, previous predictions are used instead. 
+exponential smoothing to forecast several periods ahead. Basically, a model
+that only forecasts one-step ahead is used, so that the model is applied iteratively to forecast all the future values. When historical observations to be used as features of the new instance are unavailable, previous predictions are used instead. 
 
 Because the recursive strategy uses a one-step ahead model, this means that,
 in the case of KNN, the target of an example only contains one value. For instance, let us see how the recursive strategy works with the following
@@ -183,10 +177,11 @@ example in which the next two future quarters of a quarterly time series are pre
 ```{r}
 timeS <- window(UKgas, start = c(1976, 1))
 pred <- knn_forecasting(timeS, h = 2, lags = 1:4, k = 2, msas = "recursive")
+library(ggplot2)
 autoplot(pred, highlight = "neighbors")
 ```
 
-In this example we have used lags 1-4 to specify the features of an example. To predict the first future point the last 4 values of the time series are used as "its features". To predict the second future point "its features" are the last three values of the time series and the prediction for the first future point. In the top graph the prediction for the first future point can be seen and in the bottom graph the prediction for the second point.
+In this example we have used lags 1-4 to specify the features of an example. To predict the first future point the last 4 values of the time series are used as "its features". To predict the second future point "its features" are the last three values of the time series and the prediction for the first future point. In the plot the prediction for the first future point can be seen. If you reproduce this code snippet you will also see the forecast for the second future point.
 
 # Additional features
 
@@ -194,8 +189,7 @@ In this section several additional features of our package are described.
 
 ## Combination and distance function
 
-By default, the targets of the different nearest neighbors are averaged. However, it is possible to combine the targets using other aggregation functions. Currently, our package allows to choose among the mean, the 
-median and a weighted mean using the `cb` parameter of the `knn_forecasting` function.
+By default, the targets of the different nearest neighbors are averaged. However, it is possible to combine the targets using other aggregation functions. Currently, our package allows us to choose among the mean, the median and a weighted mean using the `cb` parameter of the `knn_forecasting` function. In the *weighted* mean the target are weighted by the inverse of their distance. That is, closer neighbors of a query point will have a greater influence than neighbors which are further away.
 
 Regarding the distance function applied to compute the nearest neighbors, our package uses the Euclidean distance, although we can implement other distance metrics in the future.
 
@@ -219,7 +213,7 @@ plot(pred)
 
 ## Forecasting time series with a trend
 
-KNN is not suitable for forecasting a time series with a trend. The reason is simple, KNN predicts an average of historical values of the time series, so it cannot predict correctly values out of the range of the time series. In your time series has a trend we recommend using the parameter `transform` to transform the training samples. Use the value `"additive"`if the trend is additive or `"multiplicative"` for exponential time series:
+KNN is not suitable for forecasting a time series with a trend. The reason is simple, KNN predicts an average of historical values of the time series, so it cannot predict correctly values out of the range of the time series. If your time series has a trend we recommend using the parameter `transform` to transform the training samples. Use the value `"additive"`if the trend is additive or `"multiplicative"` for exponential time series:
 
 ```{r}
 set.seed(5)
@@ -230,17 +224,58 @@ pred2 <- knn_forecasting(timeS, h = 3, transform = "additive")
 plot(pred2)
 ```
 
+After a lot of experimentation we have observed that, in general, the additive transformation works better than the multiplicative transformation. The additive transformation works this way:
+
+* An example is transformed by subtracting the mean of the example from its values.
+* The target associated with an example is transformed by subtracting from it the mean of its associated example.
+* This way, a prediction is a weighted combination of transformed targets. To back transform a prediction, the mean of the input vector is added to it.
+
+It is easy to see an example of additive transformation using the API of the package. For example, let us see the examples of a model with no transformation:
+
+```{r}
+timeS <- ts(c(1, 3, 7, 9, 10, 12))
+model_n <- knn_forecasting(timeS, h = 1, lags = 1:2, k = 2, transform = "none")
+knn_examples(model_n)
+plot(model_n)
+```
+
+And now let us see the effect of the additive transformation:
+
+```{r}
+model_a <- knn_forecasting(timeS, h = 1, lags = 1:2, k = 2, transform = "additive")
+knn_examples(model_a)
+plot(model_a)
+```
+
+The forecast of the additive model is 14.5:
+
+```{r}
+model_a$pred
+```
+
+Let us see how this forecast is built. The last two values of the series `c(10, 12)` are the instance or query point. This instance is transform to `c(-1, 1)` by subtracting its mean value. Its two nearest neighbors are the first and third examples. Their targets are 5 and 2 respectively. These target are averaged obtaining 3.5. Finally, we add 3.5 to the mean of the query point, 11, getting the final forecast 14.5.
+
+The multiplicative transformation is similar to the additive transformation:
+
+* An example is transformed by dividing it by its mean.
+* The target associated with an example is transformed by dividing it by the mean of its associated example.
+* This way, a prediction is a weighted combination of transformed targets. To back transform a prediction, the prediction is multiplied by the mean of the input vector.
+
+
 ## Automatic forecasting
 
 Sometimes a great number of time series have to be forecast. In that situation, an automatic way of generating the forecasts is very useful. Our package is able to automatically choose all the KNN parameters. If the user only
 specifies the time series and the forecasting horizon the KNN parameters are selected as follows:
 
-* As multi-step ahead strategy MIMO is chosen (although the recursive strategy seems to be more effective).
+* As multi-step ahead strategy the recursive strategy is chosen.
 * The combination function used to aggregate the targets is the mean.
-\item *k* is selected as a combination of three models using 3, 5 and 7 nearest neighbors respectively.
-* The lags used as autoregressive features are 1:*f*, where *f* is the number of periods of the time series. For example, the lags for quarterly data are 1:4 and for monthly data 1:12. For time series in which the number of periods
-is one (for example, annual data) the lags with significant autocorrelation in the partial autocorrelation function (PACF) are selected. If no lag has a significant autocorrelation, then lags 1:5 are chosen.
-* The additive transformation is applied to the samples, so that a series with a trend can be properly forecasted.
+* *k* is selected as a combination of three models using 3, 5 and 7 nearest neighbors respectively.
+* If `frequency(ts) == f` where `ts` is the time series to be forecast and $f > 1$ then the lags used as autoregressive features are 1:*f*. For example, the lags for quarterly data are 1:4 and for monthly data 1:12. 
+* If `frequency(ts) == 1`, then:
+    * The lags with significant autocorrelation in the partial autocorrelation function (PACF) are selected. 
+    * If no lag has a significant autocorrelation, then lags 1:5 are chosen.
+    * If only one lag has significant autocorrelation, then lags 1:5 are chosen. This is done because by default the additive transformation is used and it does not make sense to use this transformation with only one autoregressive lag.
+* The additive transformation is applied to the samples, so that a series with a trend can be properly forecast.
 
 # Evaluating the model
 
@@ -261,7 +296,7 @@ example, the test sets can be seen this way:
 print(ro$test_sets)
 ```
 
-Every row of the matrix contains a different test set. The first row is a test set with the last `h` values of the time series, the second row a test set with the last `h` -  1 values of the time series and so on. Each test set has an associated training test with all the data in the time series not belonging to the test set. For every training set a KNN model with the parameters associated with the original model is built and the test set is predicted. You can see the predictions as follows:
+Every row of the matrix contains a different test set. The first row is a test set with the last `h` values of the time series, the second row a test set with the last `h` -  1 values of the time series and so on. Each test set has an associated training test with all the data in the time series preceding the test set. For every training set a KNN model with the parameters associated with the original model is built and the test set is predicted. You can see the predictions as follows:
 
 ```{r}
 print(ro$predictions)
@@ -302,6 +337,15 @@ print(ro$predictions)
 
 # Conclusions
 
-In R, just a few packages apply regression methods based on computational intelligence to time series forecasting. In this paper we have presented the **tsfknn** package that allows to forecast a time series using KNN regression. The interface of the
+In R, just a few packages apply regression methods based on computational intelligence to time series forecasting. In this paper we have presented the **tsfknn** package that allows forecasting a time series using KNN regression. The interface of the
 package is quite simple, with only one function the user can specify a KNN model
 and predict a time series. Furthermore, several graphs can be generated illustrating how the prediction has been computed and the forecasting accuracy of the model can be assessed using hold-out data.
+
+# References
+
+If you want to learn more about this package or univariate time series forecasting using KNN we suggest:
+
+* [Martínez, F., Frías, M.P., Pérez, M.D., Rivera, A.J. A methodology for applying k-nearest neighbor to time series forecasting. Artif Intell Rev 52, 2019–2037 (2019)]( https://doi.org/10.1007/s10462-017-9593-z)
+
+* [Martínez, F., Frías, M.P., Charte, F., Rivera, A.J. Time Series Forecasting with KNN in R: the tsfknn Package. The R Journal 11(2), 229–242 (2019)]( https://doi.org/10.32614/RJ-2019-004)
+
