@@ -1,5 +1,3 @@
-context("Rolling origin function")
-
 pred <- knn_forecasting(ts(1:30), h = 4, msas = "recursive", transform = "none")
 ro <- rolling_origin(pred, h = 4)
 

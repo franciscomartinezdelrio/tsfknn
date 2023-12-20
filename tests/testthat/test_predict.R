@@ -1,5 +1,3 @@
-context("predict function")
-
 expect_error(predict(knn_forecasting(ts(1:30), msas = "MIMO", h = 3), h = 4))
 
 test_that("MIMO strategy predicts fine", {

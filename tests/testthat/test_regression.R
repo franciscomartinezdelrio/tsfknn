@@ -1,5 +1,3 @@
-context("KNN regression")
-
 test_that("knn regression with one target", {
   model <- knn_model(ts(c(2, 3, 1, 5, 4, 0, 7, 1, 2)), lags = 1:2, k = 2,
                      transform = "none")
