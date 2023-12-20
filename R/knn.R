@@ -97,7 +97,7 @@ regression <- function(model, example, k) {
     if (r$distances[r$indexes[1]] == 0) {
       prediction <- unname(values[1, ])
     } else {
-      reciprocal_d <- 1 / r$distances[r$indexes]
+      reciprocal_d <- 1 / sqrt(r$distances[r$indexes])
       prediction <- numeric(ncol(model$example$targets))
       for (k_ in seq(k)) {
         prediction <- prediction + values[k_, ] * reciprocal_d[k_]
@@ -219,4 +219,3 @@ recPrediction <- function(object, h, k) {
     neighbors = neighbors
   ))
 }
-
