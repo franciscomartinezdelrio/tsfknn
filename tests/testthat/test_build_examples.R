@@ -11,7 +11,6 @@ result <- list(
   targetsI = targetsI
 )
 
-
 test_that("build_examples with one target", {
   expect_equal(build_examples(ts(1:5), 2:1, transform = "none"), result)
 })

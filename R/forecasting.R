@@ -67,14 +67,19 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = c(3, 5, 7),
     } else {
       partial <- stats::pacf(timeS, plot = FALSE)
       lags <- which(partial$acf > 2/ sqrt(length(timeS)))
-      if (length(lags) == 0) {
-        lags = 1:5
+      if (length(lags) == 0 ||
+          (length(lags) == 1 && transform %in% c("additive", "multiplicative"))) {
+          lags = 1:5
       }
     }
   }
 
   if (is.unsorted(lags)) stop("lags should be a vector in increasing order")
   stopifnot(lags[1] >= 1)
+
+  if ((length(lags) == 1 && transform %in% c("additive", "multiplicative"))) {
+    stop("It does not make sense to use only 1 autoregressive lag with the additive or multiplicative transformation")
+  }
 
   # Check k parameter
   stopifnot(is.numeric(k))
@@ -93,7 +98,6 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = c(3, 5, 7),
                       x, "examples"))
       }
   }
-
 
   # cf parameter
   cf <- match.arg(cf)
