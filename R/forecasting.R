@@ -46,12 +46,14 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = c(3, 5, 7),
                             cf = c("mean", "median", "weighted"),
                             transform = c("additive", "multiplicative", "none")) {
   # Check timeS parameter
-  stopifnot(stats::is.ts(timeS) || is.vector(timeS, mode = "numeric"))
+  if (! (stats::is.ts(timeS) || is.vector(timeS, mode = "numeric")))
+    stop("timeS parameter should be of class ts or a numeric vector")
   if (! stats::is.ts(timeS))
     timeS <- stats::as.ts(timeS)
 
   # Check h parameter
-  stopifnot(is.numeric(h), length(h) == 1, h >= 1)
+  if (! (is.numeric(h) && length(h) == 1 && h >= 1 && floor(h) == h))
+    stop("h parameter should be an integer scalar value >= 1")
 
   # msas parameter
   msas <- match.arg(msas)
