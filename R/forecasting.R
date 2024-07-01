@@ -21,7 +21,7 @@
 #'     "weighted" or "mean" (the default).
 #' @param transform A character value indicating whether the training samples
 #'   are transformed. If the time series has a trend it is recommended. By
-#'   default is \code{"multiplicative"} (multiplicative transformation). It is also
+#'   default is \code{"additive"} (additive transformation). It is also
 #'   possible a multiplicative transformation or no transformation.
 #' @return An object of class \code{"knnForecast"}. The
 #'     function \code{\link[base]{summary}} can be used to obtain or print a

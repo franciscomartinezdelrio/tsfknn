@@ -37,3 +37,17 @@ n <- data.frame("Lag 4" = c(1087.0, 989.4),
 test_that("MIMO strategy predicts fine", {
   expect_equal(nn$nneighbors, n)
 })
+
+test_that("Combination of k values works fine (recursive)", {
+  p1 <- knn_forecasting(AirPassengers, h = 12, k = 3)$prediction
+  p2 <- knn_forecasting(AirPassengers, h = 12, k = 5)$prediction
+  pc <- knn_forecasting(AirPassengers, h = 12, k = c(3, 5))$prediction
+  expect_equal(pc, (p1+p2)/2)
+})
+
+test_that("Combination of k values works fine (MIMO)", {
+  p1 <- knn_forecasting(AirPassengers, h = 12, k = 3, msas = "MIMO")$prediction
+  p2 <- knn_forecasting(AirPassengers, h = 12, k = 5, msas = "MIMO")$prediction
+  pc <- knn_forecasting(AirPassengers, h = 12, k = c(3, 5), msas = "MIMO")$prediction
+  expect_equal(pc, (p1+p2)/2)
+})
