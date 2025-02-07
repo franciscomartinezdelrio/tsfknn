@@ -22,8 +22,8 @@ default).}
 An integer.
 }
 \description{
-It computes the number of training examples that would have a KNN model
-with the specified parameters.
+It computes the number of training examples (the size of the training set)
+that would have a KNN model with the specified parameters.
 }
 \examples{
 n_training_examples(ts(1:10), h = 2, lags = 1:3, msas = "MIMO")
