@@ -232,21 +232,20 @@ nearest_neighbors_mimo <- function(forecast) {
   ))
 }
 
-#' Examples of the model associated with a prediction
+#' Training set associated to a model
 #'
-#' It allows to see the examples of the model associated to a
-#' \code{knnForecast} object.
+#' It allows to consult the training set associated to a model.
 #'
 #' @param forecast A \code{knnForecast} object.
-#' @return A matrix including the features and targets of the examples
-#'    associated with the model of a \code{knnForecast} object.
+#' @return A matrix including the features and targets of the training set
+#'   associated with the model.
 #'
 #' @examples
-#' pred <- knn_forecasting(ts(1:8), h = 1, lags = 1:2, k = 2)
-#' knn_examples(pred)
+#' m <- knn_forecasting(ts(1:8), h = 1, lags = 1:2, k = 2)
+#' knn_examples(m)
 #' @export
-knn_examples <- function(forecast) {
-  stopifnot(class(forecast) == "knnForecast")
-  cbind(forecast$model$examples$patterns, forecast$model$examples$targets)
+knn_examples <- function(model) {
+  stopifnot(class(model) == "knnForecast")
+  cbind(model$model$examples$patterns, model$model$examples$targets)
 }
 

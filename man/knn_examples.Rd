@@ -2,22 +2,21 @@
 % Please edit documentation in R/forecasting.R
 \name{knn_examples}
 \alias{knn_examples}
-\title{Examples of the model associated with a prediction}
+\title{Training set associated to a model}
 \usage{
-knn_examples(forecast)
+knn_examples(model)
 }
 \arguments{
 \item{forecast}{A \code{knnForecast} object.}
 }
 \value{
-A matrix including the features and targets of the examples
-associated with the model of a \code{knnForecast} object.
+A matrix including the features and targets of the training set
+associated with the model.
 }
 \description{
-It allows to see the examples of the model associated to a
-\code{knnForecast} object.
+It allows to consult the training set associated to a model.
 }
 \examples{
-pred <- knn_forecasting(ts(1:8), h = 1, lags = 1:2, k = 2)
-knn_examples(pred)
+m <- knn_forecasting(ts(1:8), h = 1, lags = 1:2, k = 2)
+knn_examples(m)
 }
