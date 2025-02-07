@@ -1,21 +1,21 @@
 Package: tsfknn
 Type: Package
 Title: Time Series Forecasting Using Nearest Neighbors
-Version: 0.6.0
+Version: 0.7.0
 Authors@R: person("Francisco", "Martinez", email = "fmartin@ujaen.es",
     role = c("aut", "cre"))
 Description: Allows forecasting time series using nearest neighbors regression
     Francisco Martinez, Maria P. Frias, Maria D. Perez-Godoy and Antonio J.
     Rivera (2019) <doi:10.1007/s10462-017-9593-z>. When the forecasting horizon
     is higher than 1, two multi-step ahead forecasting strategies can be used.
-    The model built is autoregressive, that is, it is only based on the 
-    observations of the time series. The nearest neighbors used in a prediction
-    can be consulted and plotted.
+    The model built is univariate and autoregressive, that is, it is only based
+    on the observations of the time series. The nearest neighbors used in a 
+    prediction can be consulted and plotted.
 Maintainer: Francisco Martinez <fmartin@ujaen.es>
 License: GPL-2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Depends: R (>= 3.6.0)
 Suggests:
     knitr,
