@@ -124,8 +124,8 @@ knn_forecasting <- function(timeS, h, lags = NULL, k = c(3, 5, 7),
 
 #' Number of training examples
 #'
-#' It computes the number of training examples that would have a KNN model
-#' with the specified parameters.
+#' It computes the number of training examples (the size of the training set)
+#' that would have a KNN model with the specified parameters.
 #'
 #' @inheritParams knn_forecasting
 #' @return An integer.
@@ -168,8 +168,8 @@ n_training_examples <- function(timeS, h, lags,
 #'    nearest neighbors.
 #'
 #' @examples
-#' pred <- knn_forecasting(UKgas, h = 4, lags = 1:4, k = 2, msas = "MIMO")
-#' nearest_neighbors(pred)
+#' m <- knn_forecasting(UKgas, h = 4, lags = 1:4, k = 2, msas = "MIMO")
+#' nearest_neighbors(m)
 #' @export
 nearest_neighbors <- function(forecast) {
   stopifnot(class(forecast) == "knnForecast")
@@ -236,7 +236,7 @@ nearest_neighbors_mimo <- function(forecast) {
 #'
 #' It allows to consult the training set associated to a model.
 #'
-#' @param forecast A \code{knnForecast} object.
+#' @param model A \code{knnForecast} object.
 #' @return A matrix including the features and targets of the training set
 #'   associated with the model.
 #'

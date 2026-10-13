@@ -7,7 +7,7 @@
 knn_examples(model)
 }
 \arguments{
-\item{forecast}{A \code{knnForecast} object.}
+\item{model}{A \code{knnForecast} object.}
 }
 \value{
 A matrix including the features and targets of the training set

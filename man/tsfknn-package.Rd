@@ -19,5 +19,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Francisco Martinez \email{fmartin@ujaen.es}
 
+Authors:
+\itemize{
+  \item Francisco Martinez \email{fmartin@ujaen.es}
+}
+
 }
 \keyword{internal}

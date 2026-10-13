@@ -18,6 +18,6 @@ It allows to check the new instances and their nearest neighbors used in a
 prediction associated with a "knnForecast" object.
 }
 \examples{
-pred <- knn_forecasting(UKgas, h = 4, lags = 1:4, k = 2, msas = "MIMO")
-nearest_neighbors(pred)
+m <- knn_forecasting(UKgas, h = 4, lags = 1:4, k = 2, msas = "MIMO")
+nearest_neighbors(m)
 }

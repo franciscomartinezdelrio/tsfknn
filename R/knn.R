@@ -138,7 +138,6 @@ regression <- function(model, example, k) {
 predict.knnForecast <- function(object, h, ...) {
   # Check h parameter
   stopifnot(is.numeric(h), length(h) == 1, h >= 1)
-
   k <- object$model$k
   ts <- object$model$ts
   if (object$msas == "recursive") {
